@@ -1,0 +1,11 @@
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+.Rhistory
+*/.Rhistory/*
+
+census-tract-shapefiles/*
+*/census-tract-shapefiles/*
+
+compressed-shapefiles/*
+*/compressed-shapefiles/*
