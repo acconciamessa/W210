@@ -1,0 +1,46 @@
+<html>
+<head>
+  <!-- TODO: remove all external dependancies -->
+  
+  <!-- Leaflet js and css files  -->
+	<link rel='stylesheet' href='http://cdn.leafletjs.com/leaflet-0.6/leaflet.css' />
+	<script src='http://cdn.leafletjs.com/leaflet-0.6/leaflet.js' type='text/javascript'></script>
+	
+	<!-- Shapefile parser and leaflet shapefile plugin --> 
+	<script src='leaflet.shpfile.js' type='text/javascript'></script>
+	<script src='shp.js' type='text/javascript'></script>
+	
+	<!-- TODO: move style sheet to a seperate css file) -->
+	<style type="text/css">
+		html, body {height: 90%; width: 90% overflow: hidden;}
+		#census_map {height: 100%; width: 100%;}
+	</style>
+</head>
+
+<body>
+	<div id="census_map"></div>
+	
+	<!-- TODO: move map creation script to a seperate js file -->
+	<script>
+	
+	// Create map
+	var map = new L.Map('census_map', {
+		center: [37.770, -122.41],
+		zoom: 6
+	});
+	
+	// Add layers
+	base_layer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png');
+	base_layer.addTo(map);
+	
+	census_tract_layer = new L.Shapefile("ca-census-tract-shapefiles.zip", 
+	{onEachFeature: function
+	  (feature, layer) { 
+      /* Add some colors based on shapefile features */
+    }
+  });
+	census_tract_layer.addTo(map)
+	
+	</script>
+</body>
+</html>
