@@ -33,30 +33,18 @@
 	base_layer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png');
 	base_layer.addTo(map);
 	
-	// Add census layers
-	census_layers = new L.Shapefile("ca-census-tract-shapefiles.zip", {
-	  onEachFeature: function (feature, layer) { 
-	    /*
-	    console.log(layer)
-	    */
-	    
-	    /*
-	    console.log(String(layer.feature.properties.STATEFP) + 
-	                String(layer.feature.properties.COUNTYFP) +
-	                String(layer.feature.properties.TRACTCE)) 
-	    */
-	    
-	    /*
-	    // Color all census tracts individually based on census tract number
-      colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet']
-      layer.options.color = colors[feature.properties.TRACTCE % 7]
-      layer.options.fillOpacity = 0.6
-      layer.options.weight = 1
-      */
+	// Array of colors for demonstrating the ability to color individual census tracts
+	colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
+	
+	// Add census layer
+	census_layer = new L.Shapefile("ca-census-tract-shapefiles.zip", {
+	  style: function(feature) {
+	    return {color: colors[feature.properties.TRACTCE % 7], fillOpacity: 0.6, weight: 1};
     }
   });
-	census_layers.addTo(map)
+	census_layer.addTo(map);
 
 	</script>
+	
 </body>
 </html>
