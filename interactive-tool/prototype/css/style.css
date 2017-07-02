@@ -22,3 +22,19 @@
   left: 98%;
   background-color: hsla(0, 0%, 40%, 0.90);
 }
+
+#map_container #control_widget input {
+  height: 30px;
+  width: 30px;
+  position: absolute;
+  z-index: 2;
+  border-radius: 50%;
+  background-color: white;
+  border-color: black;
+  border-style: solid;
+  font-weight: 900;
+  text-align: center;
+  vertical-align: middle;
+  left: -15px;
+  top: 48%;
+}
