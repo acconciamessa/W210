@@ -23,7 +23,7 @@
   background-color: hsla(0, 0%, 40%, 0.90);
 }
 
-#map_container #control_widget input {
+#map_container #control_widget button {
   height: 30px;
   width: 30px;
   position: absolute;
@@ -37,4 +37,8 @@
   vertical-align: middle;
   left: -15px;
   top: 48%;
+}
+
+#map_container #control_widget button:hover {
+  cursor: pointer;
 }
