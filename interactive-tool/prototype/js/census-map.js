@@ -40,16 +40,18 @@ function initializeMap() {
   
   num_features = 4;
   feature_handles = [null, null, null, null];
-  feature_names = ['Feature 1', 'Feature 2', 'Feature 3', 'Feature 4'];
+  feature_names = ['Feature Number 1', 'Feature Number 2', 'Feature Number 3', 'Feature Number 4'];
   feature_operators = ['+', '+', '-', 'X'];
   feature_values = ['######', '######', '######', '######'];
   feature_units = ['$', '\u00B0F', 'lb.', '%'];
 }
 
 function openControlWidget() {
+  var control_width = 350;
+  
   // Expand widget
-  control_widget.style('width', '40%')
-                .style('left', '60%');
+  control_widget.style('width', control_width)
+                .style('left', '550px');
   widget_expander.attr('onclick', 'closeControlWidget()')
                  .attr('title', 'Close Controls')
                  .text('>>');
@@ -58,12 +60,12 @@ function openControlWidget() {
   
   // Feature manipulation title box
   control_widget.append("text")
-                .text("Feature Manipulation")
-                .style('width', '200px')
-                .style('height', '30px')
+                .text('Feature Manipulation')
+                .style('text-align', 'center')
+                .style('width', '100%')
+                .style('height', '20px')
                 .style('color', 'white')
                 .style('position', 'absolute')
-                .style('left', '70px')
                 .style('top', '20px')
                 .style('z-index', '3');
         
@@ -72,9 +74,9 @@ function openControlWidget() {
     feature_handles[i] = control_widget.append("div")
                                        .attr('id', 'feature_control')
                                        .style('position', 'absolute')
-                                       .style('width', '80%')
-                                       .style('height', '30px')
-                                       .style('left', '5%')
+                                       .style('width', '100%')
+                                       .style('height', '20px')  
+                                       .style('left', '2%')
                                        .style('top', String(60 + (40*i)))
                                        .style('z-index', '3');
              
@@ -82,50 +84,65 @@ function openControlWidget() {
     feature_handles[i].append("text")
                       .text(feature_names[i])
                       .style('text-align', 'center')
-                      .style('width', '60px')
-                      .style('color', 'white')
+                      .style('height', '20px') 
+                      .style('width', '38%')
+                      .style('color', 'white')                   
                       .style('position', 'absolute')
                       .style('z-index', '3');
          
     // Feature operator             
-    feature_handles[i].append("text")
-                      .text(feature_operators[i])
-                      .style('text-align', 'center')
-                      .style('width', '30px')
-                      .style('color', 'white')
-                      .style('position', 'absolute')
-                      .style('z-index', '3')
-                      .style('left', '80px');
+    var dropdown = feature_handles[i].append('select')
+                                     .attr('title', 'Operator')
+                                     .style('text-align', 'center')
+                                     .style('height', '20px') 
+                                     .style('width', '12%')                     
+                                     .style('position', 'absolute')
+                                     .style('z-index', '3')
+                                     .style('left', '40%');
+    dropdown.append('option').text('+');
+    dropdown.append('option').text('-');
+    dropdown.append('option').text('x');                
         
     // Feature value              
-    feature_handles[i].append("text")
+    feature_handles[i].append("input")
                       .text(feature_values[i])
+                      .attr('title', 'Value')
                       .style('text-align', 'center')
-                      .style('width', '60px')
-                      .style('color', 'white')
+                      .style('height', '20px') 
+                      .style('width', '18%')
+                      .style('color', 'black')
                       .style('position', 'absolute')
                       .style('z-index', '3')
-                      .style('left', '120px');
+                      .style('left', '54%');
                       
-    // Feature units                  
-    feature_handles[i].append("text")
-                      .text(feature_units[i])
-                      .style('text-align', 'center')
-                      .style('width', '40px')
-                      .style('color', 'white')
-                      .style('position', 'absolute')
-                      .style('z-index', '3')
-                      .style('left', '180px');
+    // Feature units
+    dropdown = feature_handles[i].append('select')
+                                 .attr('title', 'Units')
+                                 .style('text-align', 'center')
+                                 .style('height', '20px') 
+                                 .style('width', '12%')                     
+                                 .style('position', 'absolute')
+                                 .style('z-index', '3')
+                                 .style('left', '74%');
+    dropdown.append('option').text('$');
+    dropdown.append('option').text('\u00B0F');
+    dropdown.append('option').text('lb.');  
+    dropdown.append('option').text('%'); 
       
     // Reset button                
-    feature_handles[i].append("text")
-                      .text('\u238c')
-                      .style('text-align', 'center')
-                      .style('width', '30px')
+    feature_handles[i].append('button')
+                      .text('\u21BA')
+                      .attr('title', 'Reset Feature')
+                      .style('border-style', 'none')
+                      .style('height', '20px')
+                      .style('width', '20px')
                       .style('color', 'white')
+                      .style('background-color', 'transparent')
                       .style('position', 'absolute')
+                      .style('font-size', '80%')
                       .style('z-index', '3')
-                      .style('left', '230px');
+                      .style('left', '90%')
+                      .style('top', '0%');
   } // End of feature loop
 
 }
