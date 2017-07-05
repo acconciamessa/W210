@@ -40,6 +40,7 @@ function initializeMap() {
   
   num_features = 4;
   feature_handles = [null, null, null, null];
+  reset_buttons = [null, null, null, null];
   feature_names = ['Feature Number 1', 'Feature Number 2', 'Feature Number 3', 'Feature Number 4'];
   feature_operators = ['x', 'x', 'x', 'x'];
   feature_values = [100, 100, 100, 100];
@@ -73,7 +74,7 @@ function openControlWidget() {
                 .style('z-index', '3');
         
   // Loop over feature arrays to create individual feature controls        
-  for (i = 0; i < num_features; i++) {
+  for (var i = 0; i < num_features; i++) {
     feature_handles[i] = control_widget.append("div")
                                        .attr('id', 'feature_control')
                                        .style('position', 'absolute')
@@ -98,6 +99,7 @@ function openControlWidget() {
                                      .attr('name', 'operator')
                                      .attr('title', 'Select Operator')
                                      .attr('value', String(feature_operators[i]))
+                                     .attr('name', 'operator')
                                      .style('text-align', 'center')
                                      .style('height', '20px') 
                                      .style('width', '12%')                     
@@ -113,6 +115,7 @@ function openControlWidget() {
                       .attr('title', 'Enter Value')
                       .attr('type', 'text')
                       .attr('value', String(feature_values[i]))
+                      .attr('name', 'value')
                       .style('text-align', 'center')
                       .style('height', '20px') 
                       .style('width', '18%')
@@ -125,6 +128,7 @@ function openControlWidget() {
     dropdown = feature_handles[i].append('select')
                                  .attr('title', 'Select Unit')
                                  .attr('value', String(feature_units[i]))
+                                 .attr('name', 'unit')
                                  .style('text-align', 'center')
                                  .style('height', '20px') 
                                  .style('width', '12%')                     
@@ -139,8 +143,9 @@ function openControlWidget() {
     // Reset button                
     feature_handles[i].append('button')
                       .text('\u21BA')
+                      .attr('name', 'reset_' + String(i))
                       .attr('title', "Reset " + String(feature_names[i]))
-                      .attr('onclick', 'resetFeature(i)')
+                      .on('click', function(){resetFeature(parseInt(this.name.slice(-1)))})
                       .style('border-style', 'none')
                       .style('height', '20px')
                       .style('width', '20px')
@@ -151,8 +156,11 @@ function openControlWidget() {
                       .style('z-index', '3')
                       .style('left', '90%')
                       .style('top', '0%');
+
+    
   } // End of feature loop
 
+  
   // Year control title box
   control_widget.append("text")
                 .text("Year")
@@ -337,8 +345,16 @@ function closeControlWidget(){
                                   .text('<<');
 }
 
-function resetFeature(i){
-  alert("resetFeature() function not yet implemented");
+function resetFeature(reset_id){
+  alert("resetFeature(" + String(reset_id+1) + ") function not yet implemented");
+  
+  //feature_operators[reset_id] = 'x';
+  //feature_values[reset_id] = 100;
+  //feature_units[reset_id] = '%';
+  
+  //feature_handles[reset_id].select('operator').attr('value', String(feature_operators[reset_id]));
+  //feature_handles[reset_id].select('value').attr('value', String(feature_values[reset_id]));
+  //feature_handles[reset_id].select('unit').attr('value', String(feature_units[reset_id]));
 }
 
 function subtractYear(){
