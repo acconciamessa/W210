@@ -1,7 +1,15 @@
+header{
+  width: 900px;
+  height: 40px;
+  left: 10%;
+  position: fixed;
+}
+
 #map_container{
   height: 500px;
   width: 900px;
   left: 10%;
+  top: 80px;
   position: fixed;
   border-style: solid;
   border-color: black;
