@@ -54,6 +54,8 @@ function openControlWidget() {
                 .style('left', '550px');
   widget_expander.attr('onclick', 'closeControlWidget()')
                  .attr('title', 'Close Controls')
+                 .style('position', 'absolute')
+                 .style('z-value', '4')
                  .text('>>');
                  
   // Populate widget
@@ -74,7 +76,7 @@ function openControlWidget() {
     feature_handles[i] = control_widget.append("div")
                                        .attr('id', 'feature_control')
                                        .style('position', 'absolute')
-                                       .style('width', '100%')
+                                       .style('width', '96%')
                                        .style('height', '20px')  
                                        .style('left', '2%')
                                        .style('top', String(60 + (40*i)))
@@ -92,13 +94,14 @@ function openControlWidget() {
          
     // Feature operator             
     var dropdown = feature_handles[i].append('select')
-                                     .attr('title', 'Operator')
+                                     .attr('title', 'Select Operator')
                                      .style('text-align', 'center')
                                      .style('height', '20px') 
                                      .style('width', '12%')                     
                                      .style('position', 'absolute')
                                      .style('z-index', '3')
                                      .style('left', '40%');
+                                     
     dropdown.append('option').text('+');
     dropdown.append('option').text('-');
     dropdown.append('option').text('x');                
@@ -106,7 +109,7 @@ function openControlWidget() {
     // Feature value              
     feature_handles[i].append("input")
                       .text(feature_values[i])
-                      .attr('title', 'Value')
+                      .attr('title', 'Enter Value')
                       .style('text-align', 'center')
                       .style('height', '20px') 
                       .style('width', '18%')
@@ -117,7 +120,7 @@ function openControlWidget() {
                       
     // Feature units
     dropdown = feature_handles[i].append('select')
-                                 .attr('title', 'Units')
+                                 .attr('title', 'Select Unit')
                                  .style('text-align', 'center')
                                  .style('height', '20px') 
                                  .style('width', '12%')                     
@@ -132,7 +135,7 @@ function openControlWidget() {
     // Reset button                
     feature_handles[i].append('button')
                       .text('\u21BA')
-                      .attr('title', 'Reset Feature')
+                      .attr('title', "Reset " + String(feature_names[i]))
                       .style('border-style', 'none')
                       .style('height', '20px')
                       .style('width', '20px')
@@ -145,19 +148,174 @@ function openControlWidget() {
                       .style('top', '0%');
   } // End of feature loop
 
+  // Year control title box
+  control_widget.append("text")
+                .text("Year")
+                .style('text-align', 'center')
+                .style('width', '100%')
+                .style('height', '20px')
+                .style('color', 'white')
+                .style('position', 'absolute')
+                .style('top', String(40 + (40*(num_features+1))))
+                .style('z-index', '3');
+   
+  // Year control             
+  year_control = control_widget.append("div")
+                               .attr('id', 'year_control')
+                               .style('position', 'absolute')
+                               .style('width', '96%')
+                               .style('height', '20px')
+                               .style('left', '2%')
+                               .style('top', String(40 + (40*(num_features + 2))))
+                               .style('z-index', '3');
+  
+  year_control.append("button")
+              .attr('name', 'subtract_year')
+              .attr('onClick', 'subtractYear()')
+              .attr('title', 'Subtract Year')
+              .style('left', '25%')
+              .style('top', '-2px')
+              .style('background-color', 'transparent')
+              .style('color', 'white')
+              .style('border-color', 'white')
+              .style('height', '25px')
+              .style('width', '25px')
+              .text('-');
+              
+  year_control.append("input")
+                      .text(feature_values[i])
+                      .attr('title', 'Enter Year')
+                      .style('width', '20%')
+                      .style('color', 'black')
+                      .style('position', 'absolute')
+                      .style('z-index', '3')
+                      .style('left', '40%');
+  
+    year_control.append("button")
+              .attr('name', 'add_year')
+              .attr('onClick', 'addYear()')
+              .attr('title', 'Add Year')
+              .style('left', '68%')
+              .style('top', '-2px')
+              .style('background-color', 'transparent')
+              .style('color', 'white')
+              .style('border-color', 'white')
+              .style('height', '25px')
+              .style('width', '25px')
+              .text('+');
+              
+  // Legend title box
+  control_widget.append("text")
+                .text("Legend")
+                .style('text-align', 'center')
+                .style('width', '100%')
+                .style('height', '20px')
+                .style('color', 'white')
+                .style('position', 'absolute')
+                .style('top', String(60 + (40*(num_features+3))))
+                .style('z-index', '3');
+                
+  // Low risk box           
+  low_risk = control_widget.append("div")
+                           .attr('id', 'low_risk')
+                           .style('position', 'absolute')
+                           .style('width', '96%')
+                           .style('height', '20px')
+                           .style('left', '2%')
+                           .style('top', String(60 + (40*(num_features + 4))))
+                           .style('z-index', '3');
+                      
+  low_risk.append('div')
+          .style('height', '15px')
+          .style('width', '30px')
+          .style('position', 'absolute')
+          .style('border-style', 'solid')
+          .style('border-weight', '1px')
+          .style('border-color', 'white')
+          .style('background-color', 'hsl(240, 100%, 90%)')
+          .style('left', '25%')
+          .style('top', '0%');
+          
+  low_risk.append('text')
+          .style('color', 'white')
+          .style('position', 'absolute')
+          .style('left', '55%')
+          .text('Low Risk Area');
+  
+  // Medium risk box
+  medium_risk = control_widget.append("div")
+                              .attr('id', 'medium_risk')
+                              .style('position', 'absolute')
+                              .style('width', '96%')
+                              .style('height', '20px')
+                              .style('left', '2%')
+                              .style('top', String(60 + (40*(num_features + 5))))
+                              .style('z-index', '3');
+  
+  medium_risk.append('div')
+          .style('height', '15px')
+          .style('width', '30px')
+          .style('border-style', 'solid')
+          .style('boder-width', '1px')
+          .style('border-color', 'white')
+          .style('background-color', 'hsl(240, 100%, 70%)')
+          .style('position', 'absolute')
+          .style('left', '25%')
+          .style('top', '0%');
+          
+  medium_risk.append('text')
+          .style('color', 'white')
+          .style('position', 'absolute')
+          .style('left', '55%')
+          .text('Medium Risk Area');
+          
+  // High risk box           
+  high_risk = control_widget.append("div")
+                            .attr('id', 'high_risk')
+                            .style('position', 'absolute')
+                            .style('width', '96%')
+                            .style('height', '20px')
+                            .style('left', '2%')
+                            .style('top', String(60 + (40*(num_features + 6))))
+                            .style('z-index', '3');
+
+  high_risk.append('div')
+          .style('height', '15px')
+          .style('width', '30px')
+          .style('position', 'absolute')
+          .style('border-style', 'solid')
+          .style('border-weight', '1px')
+          .style('border-color', 'white')
+          .style('background-color', 'hsl(240, 100%, 50%)')
+          .style('left', '25%')
+          .style('top', '0%');
+          
+  high_risk.append('text')
+          .style('color', 'white')
+          .style('position', 'absolute')
+          .style('left', '55%')
+          .text('High Risk Area');
 }
 
 function closeControlWidget(){
   
-  // Clear all children from the DOM
+  // Clear all control widget children from the DOM
   control_widget.selectAll('*').remove();
   control_widget.style('width', '2%')
                 .style('left', '98%');
   
-  // Remake the widget expander button
+  // Re-add the widget expander button to the control widget
   widget_expander = control_widget.append('button')
                                   .attr('name', 'widget_expander')
                                   .attr('onClick', 'openControlWidget()')
                                   .attr('title', 'Open Controls')
                                   .text('<<');
+}
+
+function subtractYear(){
+  
+}
+
+function addYear(){
+  
 }
