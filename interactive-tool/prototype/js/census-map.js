@@ -41,10 +41,9 @@ function initializeMap() {
   
   num_features = 4;
   feature_handles = [null, null, null, null];
-  reset_buttons = [null, null, null, null];
   feature_names = ['Feature Number 1', 'Feature Number 2', 'Feature Number 3', 'Feature Number 4'];
-  feature_operators = ['x', 'x', 'x', 'x'];
-  feature_values = [100, 100, 100, 100];
+  feature_operators = ['+', '+', '+', '+'];
+  feature_values = [0, 0, 0, 0];
   feature_units = ['%', '%', '%', '%'];
   current_year = 2010;
 } // End of initializeMap() function
@@ -69,7 +68,7 @@ function openControlWidget() {
                 
   // Loop over feature arrays to create individual feature controls        
   for (var i = 0; i < num_features; i++) {
-    feature_handles[i] = control_widget.append("div")
+    feature_handles[i] = control_widget.append("form")
                                        .attr('id', 'feature_control')
                                        .style('top', String(50 + (40*i)));
                                        
@@ -79,13 +78,13 @@ function openControlWidget() {
                       .text(feature_names[i]);
                       
     // Add feature operator dropdown         
-    feature_handles[i].append('select')
+    feature_handles[i].append("select")
                       .attr('title', 'Select Operator')
-                      .attr('value', String(feature_operators[i]))
                       .attr('id', 'operator');
-    feature_handles[i].select("#operator").append('option').text('x').attr('selected', 'selected');           
-    feature_handles[i].select("#operator").append('option').text('+');
-    feature_handles[i].select("#operator").append('option').text('-');
+    feature_handles[i].select("#operator").append('option').attr('id', '+').text('+'); 
+    feature_handles[i].select("#operator").append('option').attr('id', 'x').text('x');           
+    feature_handles[i].select("#operator").append('option').attr('id', '-').text('-');
+    // TODO: Default selection to feature_operators[i]
         
     // Add feature value input field          
     feature_handles[i].append("input")
@@ -99,18 +98,18 @@ function openControlWidget() {
                       .attr('title', 'Select Unit')
                       .attr('value', String(feature_units[i]))
                       .attr('id', 'unit');
-    feature_handles[i].select("#unit").append('option').text('%').attr('selected', 'selected'); 
+    feature_handles[i].select("#unit").append('option').text('%'); 
     feature_handles[i].select("#unit").append('option').text('$');
     feature_handles[i].select("#unit").append('option').text('\u00B0F');
-    feature_handles[i].select("#unit").append('option').text('lb.');  
+    feature_handles[i].select("#unit").append('option').text('lb.');
+    // TODO: Default selection to feature_units[i]
       
     // Add feature reset button                
-    feature_handles[i].append('button')
-                      .attr('name', 'reset_' + String(i))
+    feature_handles[i].append("input")
+                      .attr('type', 'reset')
                       .attr('title', "Reset " + String(feature_names[i]))
                       .attr('id', 'reset')
-                      .text('\u21BA')
-                      .on('click', function(){resetFeature(parseInt(this.name.slice(-1)))});
+                      .attr('value', '\u21BA');
                       
   } // End of feature creation loop
 
@@ -132,13 +131,10 @@ function openControlWidget() {
               .text('-')
               .style('left', '25%');
               
-  year_control.append("input")
-                      .text(feature_values[i])
-                      .attr('title', 'Enter Year')
-                      .attr('type', 'text')
-                      .attr('id', 'year')
-                      .attr('value', String(current_year));
-  
+  year_control.append("text")
+              .attr('id', 'year')
+              .text(String(current_year));
+
   year_control.append("button")
               .attr('id', 'add_year')
               .attr('onClick', 'addYear()')
@@ -189,7 +185,7 @@ function openControlWidget() {
 
 function closeControlWidget(){
   
-  // Clear all control widget children from the DOM
+  // Clear all control widget children from the DOM and shrink the widget
   control_widget.selectAll('*').remove();
   control_widget.style('width', '2%')
                 .style('left', '98%');
@@ -204,35 +200,36 @@ function closeControlWidget(){
 } // End of closeControlWidget() function
 
 
-function resetFeature(reset_id){
-  alert("resetFeature(" + String(reset_id+1) + ") function not yet implemented");
-  
-  //feature_operators[reset_id] = 'x';
-  //feature_values[reset_id] = 111 * (reset_id+1);
-  //feature_units[reset_id] = '%';
-  
-  //feature_handles[reset_id].select("#operator");
-  //feature_handles[reset_id].select("#value").attr('value', String(feature_values[reset_id]));
-  //feature_handles[reset_id].select("#unit");
-  
-} // End of resetFeature(reset_id) function
-
-
 function subtractYear(){
-  current_year = Math.max(current_year-1, 2010);
-  year_control.select("input").attr('value', String(current_year));
-  
+  current_year = Math.max(2010, current_year - 1);
+  year_control.select("#year").text(String(current_year));
 } // End of subtractYear() function
 
 
 function addYear(){
-  current_year = Math.min(current_year+1, 2020);
-  year_control.select("input").attr('value', String(current_year));
-  
+  current_year = Math.min(2020, current_year + 1);
+  year_control.select("#year").text(String(current_year));
 } // End of addYear() function
 
 
 function recolorMap(){
-   alert("recolorMap() function not yet implemented");
+  // Gather user-defined information
+  for (var i = 0; i < num_features; i++) {
+    feature_operators[i] = feature_handles[i].select("#operator").node().value;
+    feature_values[i] = feature_handles[i].select("#value").node().value;
+    feature_units[i] = feature_handles[i].select("#unit").node().value;
+  }
+  
+  // TODO: Use the user-defined information to recolor map
+  var output = "Function \"recolorMap()\" has not been implemented yet.\n\n";
+  output = output +  "Current year:\t" + String(current_year) + "\n\n";
+  output = output + "Current user-defined feature manipulations:\n\n";
+  for (i = 0; i < num_features; i++) {
+   output = output + "(Feature " + String(i+1) + ")\t";
+   output = output + feature_operators[i] + "\t";
+   output = output + feature_values[i] + "\t\t";
+   output = output + feature_units[i] + "\n";
+   }
    
+   alert(output);
 } // End of recolorMap() function

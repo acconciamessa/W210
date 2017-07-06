@@ -1,12 +1,13 @@
-button:hover {
-  cursor: pointer;
-}
 
 header {
   width: 900px;
   height: 40px;
   left: 10%;
   position: fixed;
+}
+
+button:hover {
+  cursor: pointer;
 }
 
 #map_container {
@@ -113,6 +114,10 @@ header {
   top: 0;
 }
 
+#map_container #control_widget #feature_control #reset:hover {
+  cursor: pointer;
+}
+
 #map_container #control_widget #year_control {
   width: 98%;
   height: 20px;
@@ -135,10 +140,11 @@ header {
 }
 
 #map_container #control_widget #year_control #year {
-  text-align: center;
   width: 20%;
-  color: black;
-  background-color: white;
+  text-align: center;
+  font-size: 100%;
+  color: white;
+  background-color: transparent;
   position: absolute;
   left: 40%;
 }                      
