@@ -1,3 +1,4 @@
+
 function initializeMap() {
   // Create map object
   var map = new L.Map('map', {
@@ -33,7 +34,7 @@ function initializeMap() {
   census_map = map_container.select('#map');
   control_widget = map_container.select('#control_widget');
   widget_expander = control_widget.append('button')
-                                  .attr('name', 'widget_expander')
+                                  .attr('id', 'widget_expander')
                                   .attr('onClick', 'openControlWidget()')
                                   .attr('title', 'Open Controls')
                                   .text('<<');
@@ -46,7 +47,8 @@ function initializeMap() {
   feature_values = [100, 100, 100, 100];
   feature_units = ['%', '%', '%', '%'];
   current_year = 2010;
-}
+} // End of initializeMap() function
+
 
 function openControlWidget() {
   var control_width = 350;
@@ -54,281 +56,136 @@ function openControlWidget() {
   // Expand widget
   control_widget.style('width', control_width)
                 .style('left', '550px');
+                
+  // Repurpose widget expander to close widget
   widget_expander.attr('onclick', 'closeControlWidget()')
                  .attr('title', 'Close Controls')
-                 .style('position', 'absolute')
-                 .style('z-value', '4')
                  .text('>>');
                  
-  // Populate widget
-  
-  // Feature manipulation title box
+  // Create feature control title box
   control_widget.append("text")
                 .text('Feature Manipulation')
-                .style('text-align', 'center')
-                .style('width', '100%')
-                .style('height', '20px')
-                .style('color', 'white')
-                .style('position', 'absolute')
-                .style('top', '20px')
-                .style('z-index', '3');
-        
+                .style('top', '20px');
+                
   // Loop over feature arrays to create individual feature controls        
   for (var i = 0; i < num_features; i++) {
     feature_handles[i] = control_widget.append("div")
                                        .attr('id', 'feature_control')
-                                       .style('position', 'absolute')
-                                       .style('width', '98%')
-                                       .style('height', '20px')  
-                                       .style('left', '2%')
-                                       .style('top', String(50 + (40*i)))
-                                       .style('z-index', '3');
-             
-    // Feature name     
+                                       .style('top', String(50 + (40*i)));
+                                       
+    // Add feature name     
     feature_handles[i].append("text")
-                      .text(feature_names[i])
-                      .style('text-align', 'center')
-                      .style('height', '20px') 
-                      .style('width', '38%')
-                      .style('color', 'white')                   
-                      .style('position', 'absolute')
-                      .style('z-index', '3');
-         
-    // Feature operator             
-    dropdown = feature_handles[i].append('select')
-                                     .attr('name', 'operator')
-                                     .attr('title', 'Select Operator')
-                                     .attr('value', String(feature_operators[i]))
-                                     .attr('name', 'operator')
-                                     .style('text-align', 'center')
-                                     .style('height', '20px') 
-                                     .style('width', '12%')                     
-                                     .style('position', 'absolute')
-                                     .style('z-index', '3')
-                                     .style('left', '40%');
-    dropdown.append('option').text('x').attr('selected', 'selected');                   
-    dropdown.append('option').text('+');
-    dropdown.append('option').text('-');
+                      .attr('id', 'feature_name')
+                      .text(feature_names[i]);
+                      
+    // Add feature operator dropdown         
+    feature_handles[i].append('select')
+                      .attr('title', 'Select Operator')
+                      .attr('value', String(feature_operators[i]))
+                      .attr('id', 'operator');
+    feature_handles[i].select("#operator").append('option').text('x').attr('selected', 'selected');           
+    feature_handles[i].select("#operator").append('option').text('+');
+    feature_handles[i].select("#operator").append('option').text('-');
         
-    // Feature value              
+    // Add feature value input field          
     feature_handles[i].append("input")
                       .attr('title', 'Enter Value')
                       .attr('type', 'text')
                       .attr('value', String(feature_values[i]))
-                      .attr('name', 'value')
-                      .style('text-align', 'center')
-                      .style('height', '20px') 
-                      .style('width', '18%')
-                      .style('color', 'black')
-                      .style('position', 'absolute')
-                      .style('z-index', '3')
-                      .style('left', '54%');
-                      
-    // Feature units
-    dropdown = feature_handles[i].append('select')
-                                 .attr('title', 'Select Unit')
-                                 .attr('value', String(feature_units[i]))
-                                 .attr('name', 'unit')
-                                 .style('text-align', 'center')
-                                 .style('height', '20px') 
-                                 .style('width', '12%')                     
-                                 .style('position', 'absolute')
-                                 .style('z-index', '3')
-                                 .style('left', '74%');
-    dropdown.append('option').text('%').attr('selected', 'selected'); 
-    dropdown.append('option').text('$');
-    dropdown.append('option').text('\u00B0F');
-    dropdown.append('option').text('lb.');  
+                      .attr('id', 'value');
+
+    // Add feature unit dropdown
+    feature_handles[i].append('select')
+                      .attr('title', 'Select Unit')
+                      .attr('value', String(feature_units[i]))
+                      .attr('id', 'unit');
+    feature_handles[i].select("#unit").append('option').text('%').attr('selected', 'selected'); 
+    feature_handles[i].select("#unit").append('option').text('$');
+    feature_handles[i].select("#unit").append('option').text('\u00B0F');
+    feature_handles[i].select("#unit").append('option').text('lb.');  
       
-    // Reset button                
+    // Add feature reset button                
     feature_handles[i].append('button')
-                      .text('\u21BA')
                       .attr('name', 'reset_' + String(i))
                       .attr('title', "Reset " + String(feature_names[i]))
-                      .on('click', function(){resetFeature(parseInt(this.name.slice(-1)))})
-                      .style('border-style', 'none')
-                      .style('height', '20px')
-                      .style('width', '20px')
-                      .style('color', 'white')
-                      .style('background-color', 'transparent')
-                      .style('position', 'absolute')
-                      .style('font-size', '80%')
-                      .style('z-index', '3')
-                      .style('left', '90%')
-                      .style('top', '0%');
-
-    
-  } // End of feature loop
+                      .attr('id', 'reset')
+                      .text('\u21BA')
+                      .on('click', function(){resetFeature(parseInt(this.name.slice(-1)))});
+                      
+  } // End of feature creation loop
 
   
-  // Year control title box
+  // Create year control title box
   control_widget.append("text")
                 .text("Year")
-                .style('text-align', 'center')
-                .style('width', '100%')
-                .style('height', '20px')
-                .style('color', 'white')
-                .style('position', 'absolute')
-                .style('top', String(20 + (40*(num_features+1))))
-                .style('z-index', '3');
+                .style('top', String(20 + (40*(num_features+1))));
    
-  // Year control             
+  // Create year control             
   year_control = control_widget.append("div")
                                .attr('id', 'year_control')
-                               .style('position', 'absolute')
-                               .style('width', '96%')
-                               .style('height', '20px')
-                               .style('left', '2%')
-                               .style('top', String(10 + (40*(num_features + 2))))
-                               .style('z-index', '3');
+                               .style('top', String(10 + (40*(num_features + 2))));
   
   year_control.append("button")
-              .attr('name', 'subtract_year')
+              .attr('id', 'subtract_year')
               .attr('onClick', 'subtractYear()')
               .attr('title', 'Subtract Year')
-              .style('left', '25%')
-              .style('top', '-2px')
-              .style('background-color', 'transparent')
-              .style('color', 'white')
-              .style('border-color', 'white')
-              .style('height', '25px')
-              .style('width', '25px')
-              .text('-');
+              .text('-')
+              .style('left', '25%');
               
   year_control.append("input")
                       .text(feature_values[i])
                       .attr('title', 'Enter Year')
                       .attr('type', 'text')
-                      .attr('value', String(current_year))
-                      .style('text-align', 'center')
-                      .style('width', '20%')
-                      .style('color', 'black')
-                      .style('position', 'absolute')
-                      .style('z-index', '3')
-                      .style('left', '40%');
+                      .attr('id', 'year')
+                      .attr('value', String(current_year));
   
   year_control.append("button")
-              .attr('name', 'add_year')
+              .attr('id', 'add_year')
               .attr('onClick', 'addYear()')
               .attr('title', 'Add Year')
               .style('left', '68%')
-              .style('top', '-2px')
-              .style('background-color', 'transparent')
-              .style('color', 'white')
-              .style('border-color', 'white')
-              .style('height', '25px')
-              .style('width', '25px')
               .text('+');
               
-  // Recolor map button
+  // Create recolor map button
   control_widget.append("button")
-                .attr('name', 'recolor_map')
+                .attr('id', 'recolor_map')
                 .attr('onClick', 'recolorMap()')
                 .attr('title', 'Recolor Map With Current Values')
-                .style('position', 'absolute')
-                .style('width', '80%')
-                .style('left', '10%')
-                .style('top', String(25 + (40*(num_features + 3))))
-                .style('border-radius', '0%')
-                .style('border-color', 'white')
-                .style('border-width', '2px')
-                .style('font-weight', 'normal')
-                .style('background-color', 'hsl(240, 100%, 50%)')
-                .style('color', 'white')
-                .text('Recolor Map');
+                .text('Recolor Map')
+                .style('top', String(25 + (40*(num_features + 3))));
   
-  // Legend title box
+  // Create legend title box
   control_widget.append("text")
                 .text("Legend")
-                .style('text-align', 'center')
-                .style('width', '100%')
-                .style('height', '20px')
-                .style('color', 'white')
-                .style('position', 'absolute')
-                .style('top', String(40 + (40*(num_features+4))))
-                .style('z-index', '3');
+                .style('top', String(40 + (40*(num_features+4))));
+
                 
-  // Low risk box           
+  // Create low risk box           
   low_risk = control_widget.append("div")
                            .attr('id', 'low_risk')
-                           .style('position', 'absolute')
-                           .style('width', '96%')
-                           .style('height', '20px')
-                           .style('left', '2%')
-                           .style('top', String(30 + (40*(num_features + 5))))
-                           .style('z-index', '3');
+                           .style('top', String(30 + (40*(num_features + 5))));
                       
-  low_risk.append('div')
-          .style('height', '15px')
-          .style('width', '30px')
-          .style('position', 'absolute')
-          .style('border-style', 'solid')
-          .style('border-width', '2px')
-          .style('border-color', 'white')
-          .style('background-color', 'hsl(240, 100%, 90%)')
-          .style('left', '25%')
-          .style('top', '0%');
-          
-  low_risk.append('text')
-          .style('color', 'white')
-          .style('position', 'absolute')
-          .style('left', '55%')
-          .text('Low Risk Area');
+  low_risk.append('div').attr('id', 'key');
+  low_risk.append('text').attr('id', 'value').text('Low Risk Area');
+
   
-  // Medium risk box
+  // Create medium risk box
   medium_risk = control_widget.append("div")
                               .attr('id', 'medium_risk')
-                              .style('position', 'absolute')
-                              .style('width', '96%')
-                              .style('height', '20px')
-                              .style('left', '2%')
-                              .style('top', String(30 + (40*(num_features + 6))))
-                              .style('z-index', '3');
+                              .style('top', String(30 + (40*(num_features + 6))));
   
-  medium_risk.append('div')
-          .style('height', '15px')
-          .style('width', '30px')
-          .style('border-style', 'solid')
-          .style('border-width', '2px')
-          .style('border-color', 'white')
-          .style('background-color', 'hsl(240, 100%, 70%)')
-          .style('position', 'absolute')
-          .style('left', '25%')
-          .style('top', '0%');
+  medium_risk.append('div').attr('id', 'key');
+  medium_risk.append('text').attr('id', 'value').text('Medium Risk Area');
           
-  medium_risk.append('text')
-          .style('color', 'white')
-          .style('position', 'absolute')
-          .style('left', '55%')
-          .text('Medium Risk Area');
-          
-  // High risk box           
+  // Create high risk box           
   high_risk = control_widget.append("div")
                             .attr('id', 'high_risk')
-                            .style('position', 'absolute')
-                            .style('width', '96%')
-                            .style('height', '20px')
-                            .style('left', '2%')
-                            .style('top', String(30 + (40*(num_features + 7))))
-                            .style('z-index', '3');
+                            .style('top', String(30 + (40*(num_features + 7))));
 
-  high_risk.append('div')
-          .style('height', '15px')
-          .style('width', '30px')
-          .style('position', 'absolute')
-          .style('border-style', 'solid')
-          .style('border-width', '2px')
-          .style('border-color', 'white')
-          .style('background-color', 'hsl(240, 100%, 50%)')
-          .style('left', '25%')
-          .style('top', '0%');
-          
-  high_risk.append('text')
-          .style('color', 'white')
-          .style('position', 'absolute')
-          .style('left', '55%')
-          .text('High Risk Area');
-}
+  high_risk.append('div').attr('id', 'key');
+  high_risk.append('text').attr('id', 'value').text('High Risk Area');
+  
+} // End of openControlWidget() function
 
 function closeControlWidget(){
   
@@ -339,35 +196,43 @@ function closeControlWidget(){
   
   // Re-add the widget expander button to the control widget
   widget_expander = control_widget.append('button')
-                                  .attr('name', 'widget_expander')
+                                  .attr('id', 'widget_expander')
                                   .attr('onClick', 'openControlWidget()')
                                   .attr('title', 'Open Controls')
                                   .text('<<');
-}
+                                  
+} // End of closeControlWidget() function
+
 
 function resetFeature(reset_id){
   alert("resetFeature(" + String(reset_id+1) + ") function not yet implemented");
   
   //feature_operators[reset_id] = 'x';
-  //feature_values[reset_id] = 100;
+  //feature_values[reset_id] = 111 * (reset_id+1);
   //feature_units[reset_id] = '%';
   
-  //feature_handles[reset_id].select('operator').attr('value', String(feature_operators[reset_id]));
-  //feature_handles[reset_id].select('value').attr('value', String(feature_values[reset_id]));
-  //feature_handles[reset_id].select('unit').attr('value', String(feature_units[reset_id]));
-}
+  //feature_handles[reset_id].select("#operator");
+  //feature_handles[reset_id].select("#value").attr('value', String(feature_values[reset_id]));
+  //feature_handles[reset_id].select("#unit");
+  
+} // End of resetFeature(reset_id) function
+
 
 function subtractYear(){
   current_year = Math.max(current_year-1, 2010);
   year_control.select("input").attr('value', String(current_year));
   
-}
+} // End of subtractYear() function
+
 
 function addYear(){
   current_year = Math.min(current_year+1, 2020);
   year_control.select("input").attr('value', String(current_year));
-}
+  
+} // End of addYear() function
+
 
 function recolorMap(){
    alert("recolorMap() function not yet implemented");
-}
+   
+} // End of recolorMap() function
