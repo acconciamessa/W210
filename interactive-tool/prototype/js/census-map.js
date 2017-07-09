@@ -289,7 +289,7 @@ function resetFeature(reset_id) {
   
   // Revert current value to default
   feature_values[reset_id] = 0;
-  feature_handles[reset_id].select('#value').attr('value', feature_values[0]);
+  feature_handles[reset_id].select('#value').attr('value', feature_values[reset_id]);
   
   // Revert current unit to default
   feature_units[reset_id] = '%';
