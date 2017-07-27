@@ -1,0 +1,17 @@
+GEO.id,Id
+GEO.id2,Id2
+GEO.display-label,Geography
+HD01_S01,Number; OCCUPANCY STATUS - Total housing units
+HD02_S01,Percent; OCCUPANCY STATUS - Total housing units
+HD01_S02,Number; OCCUPANCY STATUS - Total housing units - Occupied housing units
+HD02_S02,Percent; OCCUPANCY STATUS - Total housing units - Occupied housing units
+HD01_S04,Number; TENURE - Occupied housing units
+HD02_S04,Percent; TENURE - Occupied housing units
+HD01_S05,Number; TENURE - Occupied housing units - Owner occupied
+HD02_S05,Percent; TENURE - Occupied housing units - Owner occupied
+HD01_S06,Number; TENURE - Occupied housing units - Owner occupied - Owned with a mortgage or loan
+HD02_S06,Percent; TENURE - Occupied housing units - Owner occupied - Owned with a mortgage or loan
+HD01_S07,Number; TENURE - Occupied housing units - Owner occupied - Owned free and clear
+HD02_S07,Percent; TENURE - Occupied housing units - Owner occupied - Owned free and clear
+HD01_S08,Number; TENURE - Occupied housing units - Renter occupied
+HD02_S08,Percent; TENURE - Occupied housing units - Renter occupied
