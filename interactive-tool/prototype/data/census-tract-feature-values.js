@@ -1,4 +1,4 @@
-{
+var tract_features = {
   "6065046602": {
     "Feature Number 4": 4444, 
     "Feature Number 1": 1111, 

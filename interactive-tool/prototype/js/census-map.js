@@ -1,7 +1,7 @@
 
 function initializeMap() {
   // Create map object
-  var map = new L.Map('map', {
+  map = new L.Map('map', {
   	center: [37.770, -122.41],
   	zoom: 6
   });
@@ -15,18 +15,8 @@ function initializeMap() {
   base_layer.addTo(map);
   
   // Add census layer to map
-  census_layer = new L.Shapefile('data/ca-census-tract-shapefiles.zip', {
-    style: function(feature) {
-      return {color: 'grey',
-              opacity: 0.1,
-              weight: 1,
-              fillColor: 'blue', 
-              fillOpacity: (0.1 + 0.35 * (feature.properties.TRACTCE % 3))};
-    }
-  });
+  census_layer = addCensusLayer();
   census_layer.addTo(map);
-  
-
 	           
   // TODO: create d3 handles for control widget objects
   body = d3.select('body');
@@ -40,7 +30,7 @@ function initializeMap() {
                                   .text('<<');
   
   num_features = 4;
-  possible_operators = ['+', '-', 'x'];
+  possible_operators = ['+', '-'];
   possible_units = [['%', '$', '\u00B0F', 'lb'],
                     ['%', '$', '\u00B0F', 'lb'],
                     ['%', '$', '\u00B0F', 'lb'],
@@ -49,10 +39,68 @@ function initializeMap() {
   feature_handles = [null, null, null, null];
   feature_names = ['Feature Number 1', 'Feature Number 2', 'Feature Number 3', 'Feature Number 4'];
   feature_operators = ['+', '+', '+', '+'];
-  feature_values = [0, 0, 0, 0];
+  feature_scalars = [0, 0, 0, 0];
   feature_units = ['%', '%', '%', '%'];
   current_year = 2010;
 } // End of initializeMap() function
+
+
+function addCensusLayer() {
+  return new L.Shapefile('data/ca-census-tract-shapefiles.zip', {
+    style: function(feature) {
+      // We're looping over shapefiles here...
+      
+      // Extract tract id of current shapefile
+      var current_tract_id = String(feature.properties.STATEFP) + 
+                             String(feature.properties.COUNTYFP) + 
+                             String(feature.properties.TRACTCE);
+      current_tract_id = parseInt(current_tract_id);
+
+      // Get feature values associated with current tract id
+      current_feature_values = [];
+      for (var i = 0; i < feature_names.length; i++) {
+        current_feature_values.push(tract_features[current_tract_id][feature_names[i]]);
+      }
+
+      // Rescale feature values based on user input
+      rescaleFeatures(current_feature_values);
+      
+      // Format shapefile according to food desert likelihood (calculated via predictLikelihood() function call)
+      return {color: 'grey',
+              opacity: 0.1,
+              weight: 1,
+              fillColor: 'blue', 
+              fillOpacity: (0.1 + 0.35 * (predictLikelihood(current_tract_id, 
+                                                            current_feature_values, 
+                                                            current_year)))};
+    }
+  });
+}
+
+
+function rescaleFeatures(feature_values) {
+  
+  for (var i = 0; i < feature_values.length; i++) {
+    feature_values[i] = parseFloat(feature_values[i]);
+    
+    /*
+      Define scalar based on context. For example:
+      [operator = + , scalar = 5, unit = $] would parse as [feature value + $5]
+      [operator = - , scalar = 40, unit = %] would parse as [feature value - (40% of feature value)]
+    */
+    var scalar = parseFloat(feature_scalars[i]);
+    if (feature_units[i] == '%') {
+      scalar = (scalar / 100) * feature_values[i];
+    }
+    
+    if (feature_operators[i] == '+') {
+      feature_values[i] += scalar;
+    }
+    else {
+      feature_values[i] -= scalar;
+    }
+  }
+}
 
 
 function openControlWidget() {
@@ -105,12 +153,12 @@ function openControlWidget() {
       }
     }
     
-    // Add feature value input field          
+    // Add feature scalar input field          
     feature_handles[i].append("input")
-                      .attr('title', 'Enter Value')
+                      .attr('title', 'Enter Scalar')
                       .attr('type', 'text')
-                      .attr('value', String(feature_values[i]))
-                      .attr('id', 'value');
+                      .attr('value', String(feature_scalars[i]))
+                      .attr('id', 'scalar');
 
     // Add feature unit dropdown
     feature_handles[i].append('select')
@@ -178,7 +226,7 @@ function openControlWidget() {
   control_widget.append("button")
                 .attr('id', 'recolor_map')
                 .attr('onClick', 'recolorMap()')
-                .attr('title', 'Recolor Map With Current Values')
+                .attr('title', 'Recolor Map With Scaled Feature Values')
                 .text('Recolor Map')
                 .style('top', String(25 + (40*(num_features + 3))));
   
@@ -257,18 +305,22 @@ function recolorMap(){
   for (i = 0; i < num_features; i++) {
    output = output + "(Feature " + String(i+1) + ")\t";
    output = output + feature_operators[i] + "\t";
-   output = output + feature_values[i] + "\t\t";
+   output = output + feature_scalars[i] + "\t\t";
    output = output + feature_units[i] + "\n";
    }
    
-   alert(output);
+   //alert(output);
+   map.removeLayer(census_layer);
+   census_layer = addCensusLayer();
+   census_layer.addTo(map);
+   
 } // End of recolorMap() function
 
 
 function saveFeatureInput() {
    for (var i = 0; i < num_features; i++) {
     feature_operators[i] = feature_handles[i].select("#operator").node().value;
-    feature_values[i] = feature_handles[i].select("#value").node().value;
+    feature_scalars[i] = feature_handles[i].select("#scalar").node().value;
     feature_units[i] = feature_handles[i].select("#unit").node().value;
   }
 }
@@ -288,8 +340,8 @@ function resetFeature(reset_id) {
   }
   
   // Revert current value to default
-  feature_values[reset_id] = 0;
-  feature_handles[reset_id].select('#value').attr('value', feature_values[reset_id]);
+  feature_scalars[reset_id] = 0;
+  feature_handles[reset_id].select('#scalar').attr('value', feature_scalars[reset_id]);
   
   // Revert current unit to default
   feature_units[reset_id] = '%';
@@ -303,6 +355,6 @@ function resetFeature(reset_id) {
     }
   }
   
-  // Reset form with current operator/value/unit
+  // Reset form with current operator/scalar/unit
   feature_handles[reset_id].node().reset();
 }

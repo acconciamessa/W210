@@ -85,7 +85,7 @@ button:hover {
   top: 0;
 }       
 
-#map_container #control_widget .feature_control #value {
+#map_container #control_widget .feature_control #scalar {
   width: 18%;
   color: black;
   text-align: center;
