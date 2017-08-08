@@ -1,9 +1,12 @@
+body {
+  overflow: scroll;
+}
 
 header {
   width: 900px;
   height: 40px;
   left: 10%;
-  position: fixed;
+  position: absolute;
 }
 
 button:hover {
@@ -14,8 +17,8 @@ button:hover {
   height: 500px;
   width: 900px;
   left: 10%;
-  top: 80px;
-  position: fixed;
+  top: 125px;
+  position: absolute;
   border-style: solid;
   border-color: black;
 }
@@ -243,4 +246,24 @@ button:hover {
   position: absolute;
   left: 55%;
   top: 0;
+}
+
+#help_container {
+  height: 500px;
+  width: 900px;
+  left: 10%;
+  top: 725px;
+  position: absolute;
+  border-style: solid;
+  border-color: black;
+}
+
+footer {
+  width: 900px;
+  height: 40px;
+  top: 1300px;
+  left: 10%;
+  position: absolute;
+  border-top-style: solid;
+  border-color: black;
 }
