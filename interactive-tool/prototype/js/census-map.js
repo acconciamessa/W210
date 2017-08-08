@@ -47,6 +47,7 @@ function initializeMap() {
 
 function addCensusLayer() {
   return new L.Shapefile('data/ca-census-tract-shapefiles.zip', {
+
     style: function(feature) {
       // We're looping over shapefiles here...
       
@@ -55,17 +56,22 @@ function addCensusLayer() {
                              String(feature.properties.COUNTYFP) + 
                              String(feature.properties.TRACTCE);
       current_tract_id = parseInt(current_tract_id);
-
+      
       // Get feature values associated with current tract id
       current_feature_values = [];
       for (var i = 0; i < feature_names.length; i++) {
-        current_feature_values.push(tract_features[current_tract_id][feature_names[i]]);
+        current_feature_values.push(1111 * (i+1));
+        //current_feature_values.push(tract_features[current_tract_id][feature_names[i]]);
       }
-
+      
       // Rescale feature values based on user input
       rescaleFeatures(current_feature_values);
-      
+
       // Format shapefile according to food desert likelihood (calculated via predictLikelihood() function call)
+      if (Object.keys(tract_features).indexOf(String(current_tract_id)) == -1) {
+        return null; // Tract data not found
+      }
+      
       return {color: 'grey',
               opacity: 0.1,
               weight: 1,
@@ -73,6 +79,7 @@ function addCensusLayer() {
               fillOpacity: (0.1 + 0.35 * (predictLikelihood(current_tract_id, 
                                                             current_feature_values, 
                                                             current_year)))};
+                                                            
     }
   });
 }
