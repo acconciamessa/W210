@@ -42,6 +42,7 @@ function initializeMap() {
                     ['%', '$', '\u00B0F', 'lb']];
   
   feature_handles = [null, null, null, null];
+  /*
   feature_names = ["Total; Estimate; Some college no degree", 
                    "Percent; TENURE 0 Occupied housing units 0 Owner occupied 0 Owned free and clear",
                    "Unemployment rate; Estimate; EDUCATIONAL ATTAINMENT 0 Some college or associate's degree",
@@ -50,6 +51,11 @@ function initializeMap() {
                    "PCTGQTRS",
                    "Urban",
                    "Percent; OCCUPANCY STATUS 0 Total housing units"];
+  */
+  feature_names = ["Feature Number 1", 
+                   "Feature Number 2",
+                   "Feature Number 3",
+                   "Feature Number 4"];
   feature_operators = ['+', '+', '+', '+'];
   feature_scalars = [0, 0, 0, 0];
   feature_units = ['%', '%', '%', '%'];
