@@ -303,8 +303,11 @@
 
 	#header
 	{
-		position: relative;
-		height: 150px;
+	  background: black;
+		position: fixed;
+		height: 100px;
+		width: 100%;
+		z-index: 100;
 	}
 
 /*********************************************************************************/
@@ -443,6 +446,9 @@
 
 	#content
 	{
+	  padding-left: 10px;
+	  padding-right: 10px;
+	  padding-top: 200px;
 	}
 
 /*********************************************************************************/
@@ -489,7 +495,9 @@
 
 	#featured
 	{
-		height: 30em;
+		height: 400px;
+		top: 100px;
+		position: relative;
 		background-image: url(../images/banner.jpg);
 		background-position: center;
 		background-size: cover;
