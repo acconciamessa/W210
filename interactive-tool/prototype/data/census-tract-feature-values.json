@@ -1,4 +1,4 @@
-var tract_features = {
+{
     "6013329000":  {
       "Total; Estimate; Some college no degree":  27.2,
       "Percent; TENURE 0 Occupied housing units 0 Owner occupied 0 Owned free and clear":  12.8,
@@ -80439,4 +80439,4 @@ var tract_features = {
       "Urban":  1.0,
       "Percent; OCCUPANCY STATUS 0 Total housing units":  100.0,
     },
-};
+}

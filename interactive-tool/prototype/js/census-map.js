@@ -37,7 +37,14 @@ function initializeMap() {
                     ['%', '$', '\u00B0F', 'lb']];
   
   feature_handles = [null, null, null, null];
-  feature_names = ['Feature Number 1', 'Feature Number 2', 'Feature Number 3', 'Feature Number 4'];
+  feature_names = ["Total; Estimate; Some college no degree", 
+                   "Percent; TENURE 0 Occupied housing units 0 Owner occupied 0 Owned free and clear",
+                   "Unemployment rate; Estimate; EDUCATIONAL ATTAINMENT 0 Some college or associate's degree",
+                   "TractNum",
+                   "HUNVFlag",
+                   "PCTGQTRS",
+                   "Urban",
+                   "Percent; OCCUPANCY STATUS 0 Total housing units"];
   feature_operators = ['+', '+', '+', '+'];
   feature_scalars = [0, 0, 0, 0];
   feature_units = ['%', '%', '%', '%'];
@@ -57,29 +64,28 @@ function addCensusLayer() {
                              String(feature.properties.TRACTCE);
       current_tract_id = parseInt(current_tract_id);
       
+      // Escape condition - tract data not found
+      if (Object.keys(tract_features).indexOf(String(current_tract_id)) == -1) {
+        return null;
+      }
+      
       // Get feature values associated with current tract id
       current_feature_values = [];
       for (var i = 0; i < feature_names.length; i++) {
-        current_feature_values.push(1111 * (i+1));
-        //current_feature_values.push(tract_features[current_tract_id][feature_names[i]]);
+        current_feature_values.push(parseFloat(tract_features[current_tract_id][feature_names[i]]));
       }
       
       // Rescale feature values based on user input
-      rescaleFeatures(current_feature_values);
-
-      // Format shapefile according to food desert likelihood (calculated via predictLikelihood() function call)
-      if (Object.keys(tract_features).indexOf(String(current_tract_id)) == -1) {
-        return null; // Tract data not found
-      }
+      // rescaleFeatures(current_feature_values);
       
+      // Format shapefile according to food desert likelihood (calculated via predictLikelihood() function call)
       return {color: 'grey',
               opacity: 0.1,
               weight: 1,
-              fillColor: 'blue', 
+              fillColor: 'blue',
               fillOpacity: (0.1 + 0.35 * (predictLikelihood(current_tract_id, 
                                                             current_feature_values, 
                                                             current_year)))};
-                                                            
     }
   });
 }

@@ -1,41 +1,27 @@
-body {
-  overflow: scroll;
-}
-
-header {
-  width: 900px;
-  height: 40px;
-  left: 10%;
-  position: absolute;
-}
-
-button:hover {
-  cursor: pointer;
-}
 
 #map_container {
   height: 500px;
   width: 900px;
-  left: 10%;
-  top: 125px;
-  position: absolute;
+  position: static;
   border-style: solid;
   border-color: black;
 }
 
 #map_container #map {
   height: 100%; 
-  width: 100%;
-  position: absolute;
-  z-index: 0;
+  width: 98%;
+  position: relative;
+  top: 0;
+  z-index: 2;
 }
 
 #map_container #control_widget {
   height: 100%;
   width: 2%;
-  position: absolute;
-  z-index: 1;
-  left: 98%;
+  position: relative;
+  z-index: 3;
+  top: -100%;
+  left: 98%; 
   background-color: hsla(0, 0%, 40%, 0.90);
 }
 
@@ -43,7 +29,7 @@ button:hover {
   height: 30px;
   width: 30px;
   position: absolute;
-  z-index: 2;
+  z-index: 4;
   border-radius: 50%;
   background-color: white;
   border-color: black;
@@ -70,7 +56,7 @@ button:hover {
   width: 96%;
   height: 20px; 
   left: 2%;
-  z-index: 2;                   
+  z-index: 4;                   
 }
 
 #map_container #control_widget .feature_control .feature_name {
@@ -255,15 +241,5 @@ button:hover {
   top: 725px;
   position: absolute;
   border-style: solid;
-  border-color: black;
-}
-
-footer {
-  width: 900px;
-  height: 40px;
-  top: 1300px;
-  left: 10%;
-  position: absolute;
-  border-top-style: solid;
   border-color: black;
 }
