@@ -1,5 +1,11 @@
 
 function initializeMap() {
+  body = d3.select('body');
+  map_container = body.select('#map_container');
+  map_container.selectAll("*").remove();
+  map_container.append('div').attr('id', 'map');
+  map_container.append('div').attr('id', 'control_widget');
+  
   // Create map object
   map = new L.Map('map', {
   	center: [37.770, -122.41],
@@ -19,8 +25,7 @@ function initializeMap() {
   census_layer.addTo(map);
 	           
   // TODO: create d3 handles for control widget objects
-  body = d3.select('body');
-  map_container = body.select('#map_container');
+
   census_map = map_container.select('#map');
   control_widget = map_container.select('#control_widget');
   widget_expander = control_widget.append('button')
