@@ -42,7 +42,7 @@ function initializeMap() {
                     ['%', '$', '\u00B0F', 'lb']];
   
   feature_handles = [null, null, null, null];
-  /*
+  
   feature_names = ["Total; Estimate; Some college no degree", 
                    "Percent; TENURE 0 Occupied housing units 0 Owner occupied 0 Owned free and clear",
                    "Unemployment rate; Estimate; EDUCATIONAL ATTAINMENT 0 Some college or associate's degree",
@@ -51,11 +51,12 @@ function initializeMap() {
                    "PCTGQTRS",
                    "Urban",
                    "Percent; OCCUPANCY STATUS 0 Total housing units"];
-  */
+  /*
   feature_names = ["Feature Number 1", 
                    "Feature Number 2",
                    "Feature Number 3",
                    "Feature Number 4"];
+  */
   feature_operators = ['+', '+', '+', '+'];
   feature_scalars = [0, 0, 0, 0];
   feature_units = ['%', '%', '%', '%'];
@@ -79,7 +80,7 @@ function addCensusLayer() {
       if (Object.keys(tract_features).indexOf(String(current_tract_id)) == -1) {
         return null;
       }
-      
+        
       // Get feature values associated with current tract id
       current_feature_values = [];
       for (var i = 0; i < feature_names.length; i++) {
@@ -93,7 +94,7 @@ function addCensusLayer() {
       return {color: 'grey',
               opacity: 0.1,
               weight: 1,
-              fillColor: 'blue',
+              fillColor: 'Blue',
               fillOpacity: (0.1 + 0.35 * (predictLikelihood(current_tract_id, 
                                                             current_feature_values, 
                                                             current_year)))};
