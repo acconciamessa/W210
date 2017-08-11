@@ -1,3 +1,11 @@
+// Global variables
+feature_operators = ['+', '+', '+'];
+feature_scalars = [0, 0, 0];
+feature_units = ['%', '%', '%'];
+current_year = 2010;
+risk_area_counts = [0, 0, 0];
+desert_color = 'Blue';
+widget_open = false;
 
 function initializeMap() {
   body = d3.select('body');
@@ -22,8 +30,8 @@ function initializeMap() {
   
   // Add census layer to map
   census_layer = addCensusLayer();
-  census_layer.addTo(map);
-	           
+  census_layer.addTo(map);    
+	
   // TODO: create d3 handles for control widget objects
 
   census_map = map_container.select('#map');
@@ -34,37 +42,38 @@ function initializeMap() {
                                   .attr('title', 'Open Controls')
                                   .text('<<');
   
-  num_features = 4;
+  num_features = 3;
   possible_operators = ['+', '-'];
-  possible_units = [['%', '$', '\u00B0F', 'lb'],
-                    ['%', '$', '\u00B0F', 'lb'],
-                    ['%', '$', '\u00B0F', 'lb'],
-                    ['%', '$', '\u00B0F', 'lb']];
   
-  feature_handles = [null, null, null, null];
+  possible_units = [['%'],
+                    ['%'],
+                    ['%']];
   
-  feature_names = ["Total; Estimate; Some college no degree", 
-                   "Percent; TENURE 0 Occupied housing units 0 Owner occupied 0 Owned free and clear",
-                   "Unemployment rate; Estimate; EDUCATIONAL ATTAINMENT 0 Some college or associate's degree",
-                   "TractNum",
-                   "HUNVFlag",
-                   "PCTGQTRS",
-                   "Urban",
-                   "Percent; OCCUPANCY STATUS 0 Total housing units"];
-  /*
-  feature_names = ["Feature Number 1", 
-                   "Feature Number 2",
-                   "Feature Number 3",
-                   "Feature Number 4"];
-  */
-  feature_operators = ['+', '+', '+', '+'];
-  feature_scalars = [0, 0, 0, 0];
-  feature_units = ['%', '%', '%', '%'];
-  current_year = 2010;
+  feature_handles = [null, null, null];
+  
+  all_features = ["Total; Estimate; Some college no degree", 
+                  "Percent; TENURE 0 Occupied housing units 0 Owner occupied 0 Owned free and clear",
+                  "Unemployment rate; Estimate; EDUCATIONAL ATTAINMENT 0 Some college or associate's degree",
+                  "TractNum",
+                  "HUNVFlag",
+                  "PCTGQTRS",
+                  "Urban",
+                  "Percent; OCCUPANCY STATUS 0 Total housing units"];
+                 
+  displayed_features = ["College Dropouts",                     // all_features[0]
+                        "Unemployed College Attendees",   // all_features[2]
+                        "Individuals in Public Housing"];           // all_features[5]
+  displayed_features_idx = [0, 2, 5];
+  displayed_features_desc = ["Total number of individuals who started college but did have no degree (either associates or bachelors)",
+                             "Unemployment rate for individuals who attended college but do not have a bachelor's degree",
+                             "Percent of the population living in public housing"];                      
+                        
 } // End of initializeMap() function
 
 
 function addCensusLayer() {
+  risk_area_counts = [0, 0, 0];
+  
   return new L.Shapefile('data/ca-census-tract-shapefiles.zip', {
 
     style: function(feature) {
@@ -83,52 +92,52 @@ function addCensusLayer() {
         
       // Get feature values associated with current tract id
       current_feature_values = [];
-      for (var i = 0; i < feature_names.length; i++) {
-        current_feature_values.push(parseFloat(tract_features[current_tract_id][feature_names[i]]));
+      for (var i = 0; i < all_features.length; i++) {
+        current_feature_values.push(parseFloat(tract_features[current_tract_id][all_features[i]]));
       }
       
       // Rescale feature values based on user input
-      // rescaleFeatures(current_feature_values);
+      rescaleFeatures(current_feature_values);
+      
+      var likelihood = parseInt(predictLikelihood(current_tract_id, current_feature_values, current_year));
+      risk_area_counts[likelihood] += 1;
       
       // Format shapefile according to food desert likelihood (calculated via predictLikelihood() function call)
       return {color: 'grey',
               opacity: 0.1,
               weight: 1,
-              fillColor: 'Blue',
-              fillOpacity: (0.1 + 0.35 * (predictLikelihood(current_tract_id, 
-                                                            current_feature_values, 
-                                                            current_year)))};
+              fillColor: desert_color,
+              fillOpacity: (0.1 + 0.35 * likelihood)};
     }
   });
 }
 
 
 function rescaleFeatures(feature_values) {
-  
   for (var i = 0; i < feature_values.length; i++) {
     feature_values[i] = parseFloat(feature_values[i]);
-    
     /*
       Define scalar based on context. For example:
       [operator = + , scalar = 5, unit = $] would parse as [feature value + $5]
       [operator = - , scalar = 40, unit = %] would parse as [feature value - (40% of feature value)]
     */
     var scalar = parseFloat(feature_scalars[i]);
-    if (feature_units[i] == '%') {
+    if (feature_units[i] == '%' && i < 2) {
       scalar = (scalar / 100) * feature_values[i];
     }
-    
+
     if (feature_operators[i] == '+') {
-      feature_values[i] += scalar;
+      feature_values[displayed_features_idx[i]] += scalar;
     }
     else {
-      feature_values[i] -= scalar;
+      feature_values[displayed_features_idx[i]] -= scalar;
     }
   }
 }
 
 
 function openControlWidget() {
+  widget_open = true;
   var control_width = 350;
   
   // Expand widget
@@ -150,12 +159,13 @@ function openControlWidget() {
     feature_handles[i] = control_widget.append("form")
                                        .attr('class', 'feature_control')
                                        .attr('name', 'feature_' + String(i))
-                                       .style('top', String(50 + (40*i)));
+                                       .style('top', String(70 + (60*i)));
                                        
     // Add feature name     
     feature_handles[i].append("text")
                       .attr('class', 'feature_name')
-                      .text(feature_names[i]);
+                      .attr('title', displayed_features_desc[i])
+                      .text(displayed_features[i]);
                       
     // Add feature operator dropdown         
     feature_handles[i].append("select")
@@ -210,7 +220,7 @@ function openControlWidget() {
     // Add feature reset button                
     feature_handles[i].append("input")
                       .attr('type', 'button')
-                      .attr('title', "Reset " + String(feature_names[i]))
+                      .attr('title', "Reset " + String(displayed_features[i]))
                       .attr('id', 'reset_button')
                       .attr('name', 'reset_' + String(i))
                       .attr('value', '\u21BA')
@@ -218,12 +228,12 @@ function openControlWidget() {
                       
   } // End of feature creation loop
 
-  
+/* 
   // Create year control title box
   control_widget.append("text")
                 .text("Year")
                 .style('top', String(20 + (40*(num_features+1))));
-   
+
   // Create year control             
   year_control = control_widget.append("div")
                                .attr('id', 'year_control')
@@ -246,49 +256,84 @@ function openControlWidget() {
               .attr('title', 'Add Year')
               .style('left', '68%')
               .text('+');
-              
+*/
+
   // Create recolor map button
   control_widget.append("button")
                 .attr('id', 'recolor_map')
-                .attr('onClick', 'recolorMap()')
+                .attr('onClick', 'recolorMap().then(() => updateCountDisplays());')
                 .attr('title', 'Recolor Map With Scaled Feature Values')
                 .text('Recolor Map')
-                .style('top', String(25 + (40*(num_features + 3))));
+                .style('background-color', desert_color)
+                .style('top', String(30 + (40*(num_features + 3))));
   
   // Create legend title box
   control_widget.append("text")
                 .text("Legend")
-                .style('top', String(40 + (40*(num_features+4))));
+                .style('top', String(50 + (40*(num_features + 4))));
 
                 
   // Create low risk box           
   low_risk = control_widget.append("div")
                            .attr('id', 'low_risk')
-                           .style('top', String(30 + (40*(num_features + 5))));
+                           .style('top', String(50 + (40*(num_features + 5))))
+                           .style('width', String(control_width * 0.8));
                       
-  low_risk.append('div').attr('id', 'key');
-  low_risk.append('text').attr('id', 'value').text('Low Risk Area');
-
+  low_risk.append('div').attr('id', 'key')
+                        .style('left', '10%');
+  low_risk.append('text').attr('id', 'value')
+                         .style('left', '40%')
+                         .text('Low Risk Area');
   
   // Create medium risk box
   medium_risk = control_widget.append("div")
                               .attr('id', 'medium_risk')
-                              .style('top', String(30 + (40*(num_features + 6))));
+                              .style('top', String(50 + (40*(num_features + 6))))
+                              .style('width', String(control_width * 0.8));
   
-  medium_risk.append('div').attr('id', 'key');
-  medium_risk.append('text').attr('id', 'value').text('Medium Risk Area');
+  medium_risk.append('div').attr('id', 'key')
+                           .style('left', '10%');
+  medium_risk.append('text').attr('id', 'value')
+                            .style('left', '40%')
+                            .text('Med. Risk Area');
           
   // Create high risk box           
   high_risk = control_widget.append("div")
                             .attr('id', 'high_risk')
-                            .style('top', String(30 + (40*(num_features + 7))));
+                            .style('top', String(50 + (40*(num_features + 7))))
+                            .style('width', String(control_width * 0.8));
 
-  high_risk.append('div').attr('id', 'key');
-  high_risk.append('text').attr('id', 'value').text('High Risk Area');
+  high_risk.append('div').attr('id', 'key')
+                        .style('left', '10%');
+  high_risk.append('text').attr('id', 'value')
+                         .style('left', '40%')
+                         .text('High Risk Area');
+                         
+  updateCountDisplays();
   
 } // End of openControlWidget() function
 
+
+function updateCountDisplays(){
+  low_risk.select('#count').remove();
+  medium_risk.select('#count').remove();
+  high_risk.select('#count').remove();
+     
+  low_risk.append('text').attr('id', 'count')
+                         .style('left', '50%')
+                         .text(String(risk_area_counts[0]));
+  medium_risk.append('text').attr('id', 'count')
+                         .style('left', '50%')
+                         .text(String(risk_area_counts[1]));
+  high_risk.append('text').attr('id', 'count')
+                         .style('left', '50%')
+                         .text(String(risk_area_counts[2]));
+}
+
+
 function closeControlWidget(){
+  widget_open = false;
+  
   // Gather user-defined information
   saveFeatureInput();
   
@@ -319,10 +364,12 @@ function addYear(){
 } // End of addYear() function
 
 
-function recolorMap(){
-  // Gather user-defined information
-  saveFeatureInput();
+function recolorMap() {
+  // Gather current user-defined feature manipulations
+  saveFeatureInput(); 
   
+  return new Promise(function(resolve, reject){
+  /*
   // TODO: Use the user-defined information to recolor map
   var output = "Function \"recolorMap()\" has not been implemented yet.\n\n";
   output = output +  "Current year:\t" + String(current_year) + "\n\n";
@@ -333,12 +380,13 @@ function recolorMap(){
    output = output + feature_scalars[i] + "\t\t";
    output = output + feature_units[i] + "\n";
    }
-   
-   //alert(output);
+  */
+  
    map.removeLayer(census_layer);
    census_layer = addCensusLayer();
    census_layer.addTo(map);
-   
+   resolve();
+  });
 } // End of recolorMap() function
 
 

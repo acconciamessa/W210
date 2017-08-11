@@ -16,12 +16,12 @@ function predictLikelihood(tract_id, feature_values, year) {
 
   // returns 0, 1, or 2 corresponding to low, medium, or high food desert likelihood 
   if (score < 0.2) {
-    return 0.0;
+    return 0;
   }
   else if (score <= 0.5) {
-    return 1.0;
+    return 1;
   }
   else {
-    return 2.0;
+    return 2;
   }
 }
