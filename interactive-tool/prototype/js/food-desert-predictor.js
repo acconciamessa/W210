@@ -1,5 +1,5 @@
 
-function predictLikelihood(tract_id, feature_values, year) {
+function predictLikelihood(tract_id, feature_values) {
   // Use a pretrained model to predict the likelihood that a given census tract is a food desert
   var z = -4.13946 + // bias term
           (0.07896 * feature_values[0]) + // Total; Estimate; Some college no degree

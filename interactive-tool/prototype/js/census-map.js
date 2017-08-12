@@ -2,10 +2,36 @@
 feature_operators = ['+', '+', '+'];
 feature_scalars = [0, 0, 0];
 feature_units = ['%', '%', '%'];
-current_year = 2010;
 risk_area_counts = [0, 0, 0];
 desert_color = 'Blue';
-widget_open = false;
+num_features = 3;
+possible_operators = ['+', '-'];
+
+possible_units = [['%'],
+                  ['%'],
+                  ['%']];
+
+feature_handles = [null, null, null];
+
+
+
+all_features = ["Total; Estimate; Some college no degree", 
+                "Percent; TENURE 0 Occupied housing units 0 Owner occupied 0 Owned free and clear",
+                "Unemployment rate; Estimate; EDUCATIONAL ATTAINMENT 0 Some college or associate's degree",
+                "TractNum",
+                "HUNVFlag",
+                "PCTGQTRS",
+                "Urban",
+                "Percent; OCCUPANCY STATUS 0 Total housing units"];
+               
+displayed_features = ["College Dropouts",                     // all_features[0]
+                      "Unemployed College Attendees",   // all_features[2]
+                      "Individuals in Public Housing"];           // all_features[5]
+displayed_features_idx = [0, 2, 5];
+displayed_features_desc = ["Total number of individuals who started college but did have no degree (either associates or bachelors)",
+                           "Unemployment rate for individuals who attended college but do not have a bachelor's degree",
+                           "Percent of the population living in public housing"];         
+                          
 
 function initializeMap() {
   body = d3.select('body');
@@ -13,104 +39,88 @@ function initializeMap() {
   map_container.selectAll("*").remove();
   map_container.append('div').attr('id', 'map');
   map_container.append('div').attr('id', 'control_widget');
-  
+    
   // Create map object
   map = new L.Map('map', {
   	center: [37.770, -122.41],
-  	zoom: 6
+  	zoom: 5.5
   });
   
   // Remove leaflet attribution from the map (we'll put attributions somewhere else)
   document.getElementsByClassName('leaflet-control-attribution')[0].style.display = 'none';
   
   // Add base layer to map
-  // TODO: can/should the base layer be stored locally?
   base_layer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png');
   base_layer.addTo(map);
-  
-  // Add census layer to map
-  census_layer = addCensusLayer();
-  census_layer.addTo(map);    
-	
-  // TODO: create d3 handles for control widget objects
 
-  census_map = map_container.select('#map');
+  // Create control widget (in closed format)
   control_widget = map_container.select('#control_widget');
   widget_expander = control_widget.append('button')
                                   .attr('id', 'widget_expander')
                                   .attr('onClick', 'openControlWidget()')
                                   .attr('title', 'Open Controls')
                                   .text('<<');
+
+  addCensusLayer();
+  // Add census layer with "loading" graphic
+  /*
+  toggleLoadingGraphic("on");
+  new Promise((resolve, reject) => resolve(addCensusLayer())).then(() => 
+    toggleLoadingGraphic("off"));
+  */
   
-  num_features = 3;
-  possible_operators = ['+', '-'];
-  
-  possible_units = [['%'],
-                    ['%'],
-                    ['%']];
-  
-  feature_handles = [null, null, null];
-  
-  all_features = ["Total; Estimate; Some college no degree", 
-                  "Percent; TENURE 0 Occupied housing units 0 Owner occupied 0 Owned free and clear",
-                  "Unemployment rate; Estimate; EDUCATIONAL ATTAINMENT 0 Some college or associate's degree",
-                  "TractNum",
-                  "HUNVFlag",
-                  "PCTGQTRS",
-                  "Urban",
-                  "Percent; OCCUPANCY STATUS 0 Total housing units"];
-                 
-  displayed_features = ["College Dropouts",                     // all_features[0]
-                        "Unemployed College Attendees",   // all_features[2]
-                        "Individuals in Public Housing"];           // all_features[5]
-  displayed_features_idx = [0, 2, 5];
-  displayed_features_desc = ["Total number of individuals who started college but did have no degree (either associates or bachelors)",
-                             "Unemployment rate for individuals who attended college but do not have a bachelor's degree",
-                             "Percent of the population living in public housing"];                      
-                        
-} // End of initializeMap() function
+} // End of initializeMap() function 
 
 
 function addCensusLayer() {
   risk_area_counts = [0, 0, 0];
-  
-  return new L.Shapefile('data/ca-census-tract-shapefiles.zip', {
 
-    style: function(feature) {
-      // We're looping over shapefiles here...
+  census_layer =  new L.Shapefile('data/ca-census-tract-shapefiles.zip', {
+      style: function(feature) {
       
-      // Extract tract id of current shapefile
-      var current_tract_id = String(feature.properties.STATEFP) + 
-                             String(feature.properties.COUNTYFP) + 
-                             String(feature.properties.TRACTCE);
-      current_tract_id = parseInt(current_tract_id);
-      
-      // Escape condition - tract data not found
-      if (Object.keys(tract_features).indexOf(String(current_tract_id)) == -1) {
-        return null;
-      }
+        // We're looping over shapefiles here...
         
-      // Get feature values associated with current tract id
-      current_feature_values = [];
-      for (var i = 0; i < all_features.length; i++) {
-        current_feature_values.push(parseFloat(tract_features[current_tract_id][all_features[i]]));
+        // Extract tract id of current shapefile
+        var current_tract_id = String(feature.properties.STATEFP) + 
+                               String(feature.properties.COUNTYFP) + 
+                               String(feature.properties.TRACTCE);
+        current_tract_id = parseInt(current_tract_id);
+        
+        // Escape condition - tract data not found
+        if (Object.keys(tract_features).indexOf(String(current_tract_id)) == -1) {
+          return null;
+        }
+        
+        
+        // Get feature values associated with current tract id
+        current_feature_values = [];
+        for (var i = 0; i < all_features.length; i++) {
+          current_feature_values.push(parseFloat(tract_features[current_tract_id][all_features[i]]));
+        }
+        
+        
+        // Rescale feature values based on user input
+        rescaleFeatures(current_feature_values);
+        
+        
+        var likelihood = parseInt(predictLikelihood(current_tract_id, current_feature_values));
+        risk_area_counts[likelihood] += 1;
+        
+        
+        // Format shapefile according to food desert likelihood (calculated via predictLikelihood() function call)
+        return {color: 'grey',
+                opacity: 0.1,
+                weight: 1,
+                fillColor: desert_color,
+                fillOpacity: (0.1 + 0.35 * likelihood)};
+        }
+      
+      }); // End of return shapefile block
+      
+      if (typeof(census_layer) != 'undefined') {
+        census_layer.addTo(map);
       }
-      
-      // Rescale feature values based on user input
-      rescaleFeatures(current_feature_values);
-      
-      var likelihood = parseInt(predictLikelihood(current_tract_id, current_feature_values, current_year));
-      risk_area_counts[likelihood] += 1;
-      
-      // Format shapefile according to food desert likelihood (calculated via predictLikelihood() function call)
-      return {color: 'grey',
-              opacity: 0.1,
-              weight: 1,
-              fillColor: desert_color,
-              fillOpacity: (0.1 + 0.35 * likelihood)};
-    }
-  });
-}
+} // End of addCensusLayer() function
 
 
 function rescaleFeatures(feature_values) {
@@ -137,7 +147,6 @@ function rescaleFeatures(feature_values) {
 
 
 function openControlWidget() {
-  widget_open = true;
   var control_width = 350;
   
   // Expand widget
@@ -228,40 +237,11 @@ function openControlWidget() {
                       
   } // End of feature creation loop
 
-/* 
-  // Create year control title box
-  control_widget.append("text")
-                .text("Year")
-                .style('top', String(20 + (40*(num_features+1))));
-
-  // Create year control             
-  year_control = control_widget.append("div")
-                               .attr('id', 'year_control')
-                               .style('top', String(10 + (40*(num_features + 2))));
-  
-  year_control.append("button")
-              .attr('id', 'subtract_year')
-              .attr('onClick', 'subtractYear()')
-              .attr('title', 'Subtract Year')
-              .text('-')
-              .style('left', '25%');
-              
-  year_control.append("text")
-              .attr('id', 'year')
-              .text(String(current_year));
-
-  year_control.append("button")
-              .attr('id', 'add_year')
-              .attr('onClick', 'addYear()')
-              .attr('title', 'Add Year')
-              .style('left', '68%')
-              .text('+');
-*/
 
   // Create recolor map button
   control_widget.append("button")
                 .attr('id', 'recolor_map')
-                .attr('onClick', 'recolorMap().then(() => updateCountDisplays());')
+                .attr('onClick', 'recolorMap();')
                 .attr('title', 'Recolor Map With Scaled Feature Values')
                 .text('Recolor Map')
                 .style('background-color', desert_color)
@@ -332,8 +312,6 @@ function updateCountDisplays(){
 
 
 function closeControlWidget(){
-  widget_open = false;
-  
   // Gather user-defined information
   saveFeatureInput();
   
@@ -351,42 +329,21 @@ function closeControlWidget(){
                                   
 } // End of closeControlWidget() function
 
-
-function subtractYear(){
-  current_year = Math.max(2010, current_year - 1);
-  year_control.select("#year").text(String(current_year));
-} // End of subtractYear() function
-
-
-function addYear(){
-  current_year = Math.min(2020, current_year + 1);
-  year_control.select("#year").text(String(current_year));
-} // End of addYear() function
-
-
 function recolorMap() {
+ 
+  if (typeof(census_layer) != 'undefined') {
   // Gather current user-defined feature manipulations
-  saveFeatureInput(); 
+  saveFeatureInput();
   
-  return new Promise(function(resolve, reject){
-  /*
-  // TODO: Use the user-defined information to recolor map
-  var output = "Function \"recolorMap()\" has not been implemented yet.\n\n";
-  output = output +  "Current year:\t" + String(current_year) + "\n\n";
-  output = output + "Current user-defined feature manipulations:\n\n";
-  for (i = 0; i < num_features; i++) {
-   output = output + "(Feature " + String(i+1) + ")\t";
-   output = output + feature_operators[i] + "\t";
-   output = output + feature_scalars[i] + "\t\t";
-   output = output + feature_units[i] + "\n";
-   }
-  */
+  // Remove old census layer
+  map.removeLayer(census_layer);
+  }
   
-   map.removeLayer(census_layer);
-   census_layer = addCensusLayer();
-   census_layer.addTo(map);
-   resolve();
-  });
+  // Add new census layer
+  toggleLoadingGraphic("on");
+  new Promise((resolve, reject) => resolve(addCensusLayer())).then(() => 
+    updateCountDisplays()).then(() =>
+    toggleLoadingGraphic("off"));
 } // End of recolorMap() function
 
 
@@ -430,4 +387,16 @@ function resetFeature(reset_id) {
   
   // Reset form with current operator/scalar/unit
   feature_handles[reset_id].node().reset();
+}
+
+
+function toggleLoadingGraphic(toggle) {
+  
+  if (toggle == 'on') {
+    console.log("Show \"Loading\" Graphic.");
+  }
+  else {
+    console.log("Hide \"Loading\" Graphic.");
+  }
+  
 }

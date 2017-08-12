@@ -233,12 +233,10 @@
   top: 0;
 }
 
-#help_container {
-  height: 500px;
-  width: 900px;
-  left: 10%;
-  top: 725px;
-  position: absolute;
-  border-style: solid;
-  border-color: black;
+#map_container #loading {
+  background-color: yellow;
+  position: inherit;
+  height: 100%;
+  width: 102.04%;
+  z-index: 10;
 }
