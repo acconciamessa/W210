@@ -24,11 +24,11 @@ all_features = ["Total; Estimate; Some college no degree",
                 "Urban",
                 "Percent; OCCUPANCY STATUS 0 Total housing units"];
                
-displayed_features = ["College Dropouts",                     // all_features[0]
-                      "Unemployed College Attendees",   // all_features[2]
-                      "Individuals in Public Housing"];           // all_features[5]
+displayed_features = ["College\nDropouts",                     // all_features[0]
+                      "Unemployed\nCollege Attendees",   // all_features[2]
+                      "Individuals in\nPublic Housing"];           // all_features[5]
 displayed_features_idx = [0, 2, 5];
-displayed_features_desc = ["Total number of individuals who started college but did have no degree (either associates or bachelors)",
+displayed_features_desc = ["Total number of individuals who started college but did not receive a degree (either associates or bachelors)",
                            "Unemployment rate for individuals who attended college but do not have a bachelor's degree",
                            "Percent of the population living in public housing"];         
                           
@@ -168,10 +168,11 @@ function openControlWidget() {
     feature_handles[i] = control_widget.append("form")
                                        .attr('class', 'feature_control')
                                        .attr('name', 'feature_' + String(i))
+                                       .attr('onSubmit', 'return false')
                                        .style('top', String(70 + (60*i)));
                                        
     // Add feature name     
-    feature_handles[i].append("text")
+    feature_handles[i].append("pre")
                       .attr('class', 'feature_name')
                       .attr('title', displayed_features_desc[i])
                       .text(displayed_features[i]);
@@ -200,8 +201,11 @@ function openControlWidget() {
     // Add feature scalar input field          
     feature_handles[i].append("input")
                       .attr('title', 'Enter Scalar')
-                      .attr('type', 'text')
+                      .attr('type', 'number')
+                      .attr('step', 'any')
                       .attr('value', String(feature_scalars[i]))
+                      .attr('min', '0.0')
+                      .attr('max', '1000')
                       .attr('id', 'scalar');
 
     // Add feature unit dropdown
@@ -340,8 +344,10 @@ function recolorMap() {
   }
   
   // Add new census layer
-  toggleLoadingGraphic("on");
-  new Promise((resolve, reject) => resolve(addCensusLayer())).then(() => 
+  
+  new Promise((resolve, reject) => resolve()).then(() =>
+    toggleLoadingGraphic("on")).then(() =>
+    addCensusLayer()).then(() => 
     updateCountDisplays()).then(() =>
     toggleLoadingGraphic("off"));
 } // End of recolorMap() function
@@ -394,9 +400,11 @@ function toggleLoadingGraphic(toggle) {
   
   if (toggle == 'on') {
     console.log("Show \"Loading\" Graphic.");
+    map_container.append('loader').attr('id', 'loader');
   }
   else {
     console.log("Hide \"Loading\" Graphic.");
+    map_container.selectAll('#loader').remove();
   }
   
 }
