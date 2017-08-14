@@ -1,52 +1,53 @@
 <html>
-  
+
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>Food Desert Predictor</title>
-  
+
   <!-- Webpage display js and css files -->
 	<link rel='stylesheet' href='css/map-style-sheet.css' />
 	<link href="css/default.css" rel="stylesheet" type="text/css" media="all" />
   <link href="css/fonts.css" rel="stylesheet" type="text/css" media="all" />
-  
+  <link href="css/our_styles.css" rel="stylesheet" type="text/css" media="all" />
+
 	<script src='js/census-map.js' type='text/javascript'></script>
 	<script src='js/d3.js' type='text/javascript'></script>
 	<script src='js/jquery-3.1.1.min.js' type='text/javascript'></script>
-	
-	<!-- Predictive model files --> 
+
+	<!-- Predictive model files -->
   <script src='js/food-desert-predictor.js' type="text/javascript"></script>
 	<script src='data/census-tract-feature-values.js' type="text/javascript"></script>
-  	
+
   <!-- Leaflet js and css files  -->
 	<link rel='stylesheet' href='css/leaflet.css' />
 	<script src='js/leaflet.js' type='text/javascript'></script>
 	<script src='js/leaflet-src.js' type='text/javascript'></script>
-	
-	<!-- Shapefile parser and leaflet shapefile plugin --> 
+
+	<!-- Shapefile parser and leaflet shapefile plugin -->
 	<script src='js/leaflet.shpfile.js' type='text/javascript'></script>
 	<script src='js/shp.js' type='text/javascript'></script>
-	
-	
+
+
   <!-- External Webpage Formatting -->
 
   <meta name="keywords" content="" />
   <meta name="description" content="" />
   <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800" rel="stylesheet" />
 
-	
+
 </head>
 
 <body>
 
-<!-- Loader --> 
+<!-- Loader -->
 <div id="loader" style="width: 100%; height: 100%; background-color: white; margin: 0;"></div>
 <script type='text/javascript'>window.onload = function() { $("#loader").fadeOut("fast"); }; </script>
 
-<!-- Header -->  
+<!-- Header -->
 <div id="header-wrapper">
 	<div id="header" class="container">
 		<div id="logo">
-			<h1><a href="#">Food Desert Predictor</a></h1>
+			<h1 class='heading-navigator'><a href="#">Food Desert Predictor</a></h1>
 		</div>
 		<div id="menu">
 			<ul>
@@ -59,72 +60,72 @@
 		</div>
 	</div>
 </div>
- 
+
 
 <!-- Page -->
 <div id="featured">&nbsp;</div>
 <div id="wrapper">
 	<div id="page" class="container">
 		<div id="content">
-		  
-		  
+
+
 		  <!-- Food Inequity Background -->
 		  <div id="food-insecurity">
 		    <center><H1>Going to Bed Hungry – an Intro to Food insecurity</H1></center>
-		    
+
 		    <p>Approximately 15 million children live in households without adequate access to sufficient food and nutrition. That’s about 1 in every 5 children in the United States. Without adequate access to healthy foods, nutrition suffers. This can have a particularly significant impact on children, as poor nutrition is linked with a higher rate of conditions like Type 2 Diabetes, asthma, and more. Moreover, poor nutrition can impair cognitive development and school performance, jeopardizing the child’s ability to succeed. Because food insecurity can make proper nutrition a communal challenge, the aforementioned negative impacts can be similarly felt on a broad scale - as such, being able to proactively mitigate the risks of food insecurity could have substantial benefits to entire tracts of a city or county.</p>
-		    
+
 		    <p>Until now, though, addressing food insecurity has been a largely reactive process, with policymakers and non-profits seeking to address the issue as it occurs in a specific community. But what if these organizations could see a food insecure area emerging before it actually does, allowing for quick, preemptive action to minimize the impact on the at-risk population? Our team has sought to answer this question, building a predictive model to anticipate food insecurity before it occurs.</p>
 		  </div>
-		  
-		  
+
+
 		  <!-- Food Desert Definition -->
 		  <div id="food-deserts">
 		    <center><H1>Food Deserts – a Food Insecurity Phenomenon</H1></center>
-		    
+
 		    <p>Before delving into our model, it is first important to understand the nomenclature and context of food insecurity in the United States. Geographic areas where residents have restricted or nonexistent access to affordable, healthy food options are known as “food deserts”. The USDA defines a food desert as a census tract in which residents are more than one mile away from a supermarket in an urban setting, or ten miles away for a suburban setting.</p>
 
 		    <p>Currently, 14% of the overall population live in such areas – a number that jumps to 21% when just considering households with children. Food deserts are not purely an economic phenomenon either – as of 2016, 26% of the individuals suffering from food insecurity earned too much to qualify for federal nutrition assistance programs. It’s also estimated that individuals living in these areas spend up to 37% more on food due to restricted options in their area, exacerbating other economic challenges.</p>
 
 		    <p>[Add interesting relationships from EDA]</p>
 		  </div>
-		  
-		  
+
+
 		  <!-- Prediction Tool Background and Value Proposition -->
 		  <div id="about-the-tool">
 		    <center><H1>The Food Desert Predictor – Why It’s Necessary</H1></center>
-		    
+
 		    <p>The USDA Research Atlas provides a visualization of food deserts in the United States currently and in the past (dating back to 2011).  Our tool, the Food Desert Predictor, seeks to build upon this tool by providing a prospective look at food deserts, identifying areas that are likely to be food deserts in the near future.</p>
-		    
+
 		    <p>By understanding which areas are at risk in advance of actually becoming a food desert, we believe this tool can be useful to a wide range of stakeholders. For starters, policymakers that represent areas at risk of becoming food deserts could design specific policy interventions to either prevent the food desert from emerging or minimize the impacts of food insecurity by understanding the most influential contributing factors. Similarly, affected populations and community groups can use the tool to lobby and influence policymakers in a quantitative, objective way. Meanwhile, non-profits such as food banks can use the tool to inform their operations, allowing them to better prepare to serve new geographic areas and populations.</p>
-	
+
 		    <p>Beyond these socially-motivated groups, property owners (or prospective property owners) could use the tool as a means to assess potential risk to their investment, as homes would likely lose value if a food desert emerged in their neighborhood.</p>
-		    
-		    <center><H3>Underneath the Hood - How Our Predictor Works</H3></center>
+
+		    <center><H2>Underneath the Hood - How Our Predictor Works</H2></center>
 
         <p>In order to build our predictive tool, we combined datasets from the USDA and several other sources to get a holistic picture of socioeconomic dynamics within California’s 8,000+ census tracts – many of which are currently struggling with food insecurity. Based on an initial model including 98 economic, demographic, housing, and education variables, we identified the variables that were most significant in predicting the emergence of a food desert in a census tract. We then leveraged machine learning principles to build a logistic regression model capable of predicting a food desert with a high degree of accuracy (~80%) on just a handful of variables.</p>
 
 		  </div>
-		  
-		  
+
+
 		  <!-- Try It Out-->
 		  <div id="try-it-out">
 		    <center><H1>Try It Out – Testing Your Census Tract</H1></center>
-		    
+
 		    <p>In the tool below, you can provide values for each of these most influential variables based on the characteristics of a census tract you are interested in. The tool will then provide an indication of whether your census tract is at risk of being a food desert in the future.</p>
-		    
+
 		    <p>Try it out for yourself!</p>
-		    
+
   		  <div id='map_container'>
   		    <button style="width:100%; height:100%" onclick="initializeMap();">Click Here To Load Food Desert Predictor</button>
         </div>
-        
-        <center><H3>Next Steps</H3></center>
+
+        <center><H2>Next Steps</H2></center>
 
         <p>Our initial model focused solely on the state of California, and as such we would seek to expand its geographic scope moving forward. Moreover, we would seek to incorporate a broader range of data sources to potentially unearth unexpected contributors to the emergence of food deserts that could inform novel and effective interventions while also improving the accuracy of our predictive model. If we are able to improve our tool and gain adoption from key stakeholders, the impact could potentially improve the health and well-being of millions of children across the United States.</p>
 
 		  </div>
-			
+
 		</div>
 	</div>
 </div>
