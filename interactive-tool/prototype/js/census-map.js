@@ -35,11 +35,16 @@ displayed_features_desc = ["Total number of individuals who started college but 
 
 function initializeMap() {
   body = d3.select('body');
-  map_container = body.select('#map_container');
-  map_container.selectAll("*").remove();
+  map_frame = body.select('#map_frame');
+  map_frame.selectAll("*").remove();
+  
+  map_container = map_frame.append('div').attr('id', 'map_container');
   map_container.append('div').attr('id', 'map');
   map_container.append('div').attr('id', 'control_widget');
-    
+
+
+  //toggleLoadingGraphic('on');
+
   // Create map object
   map = new L.Map('map', {
   	center: [37.770, -122.41],
@@ -72,7 +77,7 @@ function initializeMap() {
 } // End of initializeMap() function 
 
 
-function addCensusLayer() {
+async function addCensusLayer() {
   risk_area_counts = [0, 0, 0];
 
   census_layer =  new L.Shapefile('data/ca-census-tract-shapefiles.zip', {
@@ -334,22 +339,17 @@ function closeControlWidget(){
 } // End of closeControlWidget() function
 
 function recolorMap() {
- 
-  if (typeof(census_layer) != 'undefined') {
-  // Gather current user-defined feature manipulations
-  saveFeatureInput();
+  toggleLoadingGraphic('on');
+  setTimeout(function() {recolorMapHelper().then(() => toggleLoadingGraphic('off'));}, 1000);
+}
+
+
+async function recolorMapHelper() {
+  saveFeatureInput(); // Gather current user-defined feature manipulations
+  map.removeLayer(census_layer); // Remove old census layer
   
-  // Remove old census layer
-  map.removeLayer(census_layer);
-  }
-  
-  // Add new census layer
-  
-  new Promise((resolve, reject) => resolve()).then(() =>
-    toggleLoadingGraphic("on")).then(() =>
-    addCensusLayer()).then(() => 
-    updateCountDisplays()).then(() =>
-    toggleLoadingGraphic("off"));
+  addCensusLayer().then(() =>
+  updateCountDisplays());
 } // End of recolorMap() function
 
 
@@ -399,12 +399,13 @@ function resetFeature(reset_id) {
 function toggleLoadingGraphic(toggle) {
   
   if (toggle == 'on') {
-    console.log("Show \"Loading\" Graphic.");
+    //console.log("Show \"Loading\" Graphic.");
     map_container.append('loader').attr('id', 'loader');
+    map_container.append('div').attr('id', 'loader_text').text('Loading...');
   }
   else {
-    console.log("Hide \"Loading\" Graphic.");
+    //console.log("Hide \"Loading\" Graphic.");
     map_container.selectAll('#loader').remove();
+    map_container.selectAll('#loader_text').remove();
   }
-  
 }
