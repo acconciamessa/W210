@@ -50,7 +50,7 @@
 		</div>
 		<div id="menu">
 			<ul>
-				<li><a href="#food-inequity" accesskey="1" title="">Food Inequity</a></li>
+				<li><a href="#food-insecurity" accesskey="1" title="">Food Insecurityy</a></li>
 				<li><a href="#food-deserts" accesskey="2" title="">Food Deserts</a></li>
 				<li><a href="#about-the-tool" accesskey="3" title="">About The Tool</a></li>
 				<li><a href="#try-it-out" accesskey="3" title="">Try It Out</a></li>
@@ -69,44 +69,60 @@
 		  
 		  
 		  <!-- Food Inequity Background -->
-		  <div id="food-inequity">
-		    <center><H1>Food inequity in the United States</H1></center>
-		    <p>- Problem Statement</p>
-		    <p>- Dangers of an insufficient diet</p>
-		    <p>- Justify the need to address this issue</p>
-		    <img src="images/food-insecurity-1.jpg" class="image image-full"/>
+		  <div id="food-insecurity">
+		    <center><H1>Going to Bed Hungry – an Intro to Food insecurity</H1></center>
+		    
+		    <p>Approximately 15 million children live in households without adequate access to sufficient food and nutrition. That’s about 1 in every 5 children in the United States. Without adequate access to healthy foods, nutrition suffers. This can have a particularly significant impact on children, as poor nutrition is linked with a higher rate of conditions like Type 2 Diabetes, asthma, and more. Moreover, poor nutrition can impair cognitive development and school performance, jeopardizing the child’s ability to succeed. Because food insecurity can make proper nutrition a communal challenge, the aforementioned negative impacts can be similarly felt on a broad scale - as such, being able to proactively mitigate the risks of food insecurity could have substantial benefits to entire tracts of a city or county.</p>
+		    
+		    <p>Until now, though, addressing food insecurity has been a largely reactive process, with policymakers and non-profits seeking to address the issue as it occurs in a specific community. But what if these organizations could see a food insecure area emerging before it actually does, allowing for quick, preemptive action to minimize the impact on the at-risk population? Our team has sought to answer this question, building a predictive model to anticipate food insecurity before it occurs.</p>
 		  </div>
 		  
 		  
 		  <!-- Food Desert Definition -->
 		  <div id="food-deserts">
-		    <center><H1>What is a food desert?</H1></center>
-		    <p>- Conceptual definition</p>
-		    <p>- Food desert trends in United States</p>
-		    <p>- Current statistis about food deserts in the United States</p>
-		    <p>- Any interesting relationships/visualizations found during EDA</p>
-		    <img src="images/food-desert-1.jpg" class="image image-full"/>
+		    <center><H1>Food Deserts – a Food Insecurity Phenomenon</H1></center>
+		    
+		    <p>Before delving into our model, it is first important to understand the nomenclature and context of food insecurity in the United States. Geographic areas where residents have restricted or nonexistent access to affordable, healthy food options are known as “food deserts”. The USDA defines a food desert as a census tract in which residents are more than one mile away from a supermarket in an urban setting, or ten miles away for a suburban setting.</p>
+
+		    <p>Currently, 14% of the overall population live in such areas – a number that jumps to 21% when just considering households with children. Food deserts are not purely an economic phenomenon either – as of 2016, 26% of the individuals suffering from food insecurity earned too much to qualify for federal nutrition assistance programs. It’s also estimated that individuals living in these areas spend up to 37% more on food due to restricted options in their area, exacerbating other economic challenges.</p>
+
+		    <p>[Add interesting relationships from EDA]</p>
 		  </div>
 		  
 		  
 		  <!-- Prediction Tool Background and Value Proposition -->
 		  <div id="about-the-tool">
-		    <center><H1>The Food Desert Predictor</H1></center>
-		    <p>- Extension of USDA's Food Access Research Atlas</p>
-		    <p>- Explain value proposition</p>
-		    <p>- Explain use cases, target audience, ROI</p>
-		    <p>- Frame tool as a POC, acknowledge limitations, propose future extensions and improvements </p>
-		    <img src="images/food-access-research-atlas-1.png" class="image image-full"/>
+		    <center><H1>The Food Desert Predictor – Why It’s Necessary</H1></center>
+		    
+		    <p>The USDA Research Atlas provides a visualization of food deserts in the United States currently and in the past (dating back to 2011).  Our tool, the Food Desert Predictor, seeks to build upon this tool by providing a prospective look at food deserts, identifying areas that are likely to be food deserts in the near future.</p>
+		    
+		    <p>By understanding which areas are at risk in advance of actually becoming a food desert, we believe this tool can be useful to a wide range of stakeholders. For starters, policymakers that represent areas at risk of becoming food deserts could design specific policy interventions to either prevent the food desert from emerging or minimize the impacts of food insecurity by understanding the most influential contributing factors. Similarly, affected populations and community groups can use the tool to lobby and influence policymakers in a quantitative, objective way. Meanwhile, non-profits such as food banks can use the tool to inform their operations, allowing them to better prepare to serve new geographic areas and populations.</p>
+	
+		    <p>Beyond these socially-motivated groups, property owners (or prospective property owners) could use the tool as a means to assess potential risk to their investment, as homes would likely lose value if a food desert emerged in their neighborhood.</p>
+		    
+		    <center><H3>Underneath the Hood - How Our Predictor Works</H3></center>
+
+        <p>In order to build our predictive tool, we combined datasets from the USDA and several other sources to get a holistic picture of socioeconomic dynamics within California’s 8,000+ census tracts – many of which are currently struggling with food insecurity. Based on an initial model including 98 economic, demographic, housing, and education variables, we identified the variables that were most significant in predicting the emergence of a food desert in a census tract. We then leveraged machine learning principles to build a logistic regression model capable of predicting a food desert with a high degree of accuracy (~80%) on just a handful of variables.</p>
+
 		  </div>
 		  
 		  
 		  <!-- Try It Out-->
 		  <div id="try-it-out">
-		    <center><H1>Try it out</H1></center>
-		    <p>- Brief description of how to use tool</p>
+		    <center><H1>Try It Out – Testing Your Census Tract</H1></center>
+		    
+		    <p>In the tool below, you can provide values for each of these most influential variables based on the characteristics of a census tract you are interested in. The tool will then provide an indication of whether your census tract is at risk of being a food desert in the future.</p>
+		    
+		    <p>Try it out for yourself!</p>
+		    
   		  <div id='map_container'>
   		    <button style="width:100%; height:100%" onclick="initializeMap();">Click Here To Load Food Desert Predictor</button>
         </div>
+        
+        <center><H3>Next Steps</H3></center>
+
+        <p>Our initial model focused solely on the state of California, and as such we would seek to expand its geographic scope moving forward. Moreover, we would seek to incorporate a broader range of data sources to potentially unearth unexpected contributors to the emergence of food deserts that could inform novel and effective interventions while also improving the accuracy of our predictive model. If we are able to improve our tool and gain adoption from key stakeholders, the impact could potentially improve the health and well-being of millions of children across the United States.</p>
+
 		  </div>
 			
 		</div>
@@ -121,6 +137,8 @@
 			<h2>Team</h2>
 	  </header>
 		<h3>Acknowledgements</h3>
+		<p>Add credits for all data sources and open-source software libraries used in this project.</p>
+		<p>We would like to thank Joyce Shen and Alberto Todeschini for providing guidance throughout the scoping and development of our project.</p>
 	</div>
 </div>
 
