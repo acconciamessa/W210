@@ -32,7 +32,7 @@
   border-top: 12px solid blue;
   border-right: 12px solid green;
   border-bottom: 12px solid red;
-  border-left: 12px solid pink;
+  border-left: 12px solid white;
   border-radius: 50%;
   background-color: hsl(0, 0%, 40%);
   animation: spin 2s linear infinite;
