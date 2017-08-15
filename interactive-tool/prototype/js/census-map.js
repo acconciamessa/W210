@@ -51,9 +51,7 @@ function initializeMap() {
   // Remove leaflet attribution from the map (we'll put attributions somewhere else)
   document.getElementsByClassName('leaflet-control-attribution')[0].style.display = 'none';
   
-  // Add base layer to map
-  base_layer = L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png');
-  base_layer.addTo(map);
+
 
   // Create control widget (in closed format)
   control_widget = map_container.select('#control_widget');
@@ -70,10 +68,19 @@ function initializeMap() {
   // We'll call the method once and ignore the return value
   new Promise(function(resolve, reject) {new L.shapefile('data/ca-census-tract-shapefiles.zip');});
   
-  // This is where we actually generate the census layer 
-  setTimeout(function() {addCensusLayer().then(() => toggleLoadingGraphic('off'))}, 1000);
+  // This is where we actually generate the map layers 
+  setTimeout(function() {
+    addBaseLayer().then(() =>
+    addCensusLayer()).then(() => 
+    toggleLoadingGraphic('off'))}, 1000);
   
 } // End of initializeMap() function 
+
+
+async function addBaseLayer() {
+  base_layer = L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png');
+  base_layer.addTo(map);
+}
 
 
 async function addCensusLayer() {
