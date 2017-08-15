@@ -79,7 +79,7 @@ function initializeMap() {
 
 
 async function throwAwayLayer(){
-  new L.shapefile('data/ca-census-tract-shapefiles.zip');
+  throw_away_layer = new L.shapefile('data/ca-census-tract-shapefiles.zip');
 }
 
 
