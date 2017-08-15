@@ -55,8 +55,13 @@
 	
 	.container
 	{
-		margin: 0px auto;
+		margin: 0 auto;
 		width: 1200px;
+	}
+	
+	.anchor
+	{
+	  padding-top: 50px;
 	}
 	
 /*********************************************************************************/
@@ -144,12 +149,6 @@
 	ul.style1 a
 	{
 		text-decoration: none;
-		color: #525252;
-	}
-
-	ul.style1 a:hover
-	{
-		text-decoration: underline;
 		color: #525252;
 	}
 
@@ -248,7 +247,6 @@
 			-o-transition: opacity 0.25s ease-in-out;
 			-ms-transition: opacity 0.25s ease-in-out;
 			transition: opacity 0.25s ease-in-out;
-			background: #48ED22;
 		}
 		
 		.button:active
@@ -258,7 +256,6 @@
 			-o-transition: opacity 0.25s ease-in-out;
 			-ms-transition: opacity 0.25s ease-in-out;
 			transition: opacity 0.25s ease-in-out;
-			background: #40D31F;
 		}
 		
 		.button-big
@@ -299,16 +296,21 @@
 	
 	#header-wrapper
 	{
+	  position: fixed;
+	  top: 0;
+	  height: 60px;
+	  width: 100%;
+	  background: black;
+	  z-index: 20;
 	}
 
 	#header
 	{
-	  background: black;
-		position: fixed;
-		height: 100px;
-		width: 100%;
-		z-index: 100;
+	  position: absolute;
+	  width: 1200px;
+	  min-width: 1200px;
 	}
+	
 
 /*********************************************************************************/
 /* Logo                                                                          */
@@ -317,7 +319,7 @@
 	#logo
 	{
 		position: absolute;
-		top: 3em;
+		top: 12px;
 		left: 0;
 		width: 100%;
 	}
@@ -345,7 +347,7 @@
 	{
 		position: absolute;
 		right: 0;
-		top: 3.5em;
+		top: 20px;
 	}
 	
 	#menu ul
@@ -372,12 +374,6 @@
 		font-weight: 600;
 		text-transform: uppercase;
 		outline: 0;
-		color: #FFF;
-	}
-	
-	#menu li:hover a, #menu li.active a, #menu li.active span
-	{
-		background: #068900;
 		color: #FFF;
 	}
 	
@@ -448,7 +444,6 @@
 	{
 	  padding-left: 10px;
 	  padding-right: 10px;
-	  padding-top: 200px;
 	}
 
 /*********************************************************************************/
@@ -495,24 +490,30 @@
 
 	#featured
 	{
-		height: 400px;
-		top: 100px;
+		height: 500px;
+		width: 1200px;
+		top: 60px;
 		position: relative;
 		background-image: url(../images/banner.jpg);
-		background-position: center;
-		background-size: cover;
+
+		background-attachment: fixed;
+		background-repeat: repeat-x;
 	}
 
 
 /*********************************************************************************/
 /* Footer                                                                        */
 /*********************************************************************************/
-
+  #footer-wrapper {
+		overflow: hidden;
+		text-align: center;
+		width: 100%;
+  }
+  
+  
 	#footer
 	{
-		overflow: hidden;
-		padding: 5em 0em;
-		text-align: center;
+	  width: 1200px;
 	}
 	
 	#footer header
@@ -531,8 +532,10 @@
 
 	#copyright
 	{
+	  position: absolute;
 		overflow: hidden;
 		padding: 2em 0em 5em 0em;
+		width: 1200px;
 	}
 	
 	#copyright p
