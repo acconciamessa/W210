@@ -74,7 +74,7 @@ function initializeMap() {
   setTimeout(function() {
     addBaseLayer().then(() =>
     addCensusLayer()).then(() => 
-    toggleLoadingGraphic('off'))}, 1000);
+    toggleLoadingGraphic('off'))}, 5000);
   
 } // End of initializeMap() function 
 
