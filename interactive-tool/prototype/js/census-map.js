@@ -413,12 +413,12 @@ function resetFeature(reset_id) {
 function toggleLoadingGraphic(toggle) {
   
   if (toggle == 'on') {
-    console.log("Show \"Loading\" Graphic.");
+    //console.log("Show \"Loading\" Graphic.");
     map_container.append('loader').attr('id', 'loader');
     map_container.append('div').attr('id', 'loader_text').text('Loading...');
   }
   else {
-    console.log("Hide \"Loading\" Graphic.");
+    //console.log("Hide \"Loading\" Graphic.");
     map_container.selectAll('#loader').remove();
     map_container.selectAll('#loader_text').remove();
   }
