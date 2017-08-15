@@ -52,7 +52,7 @@ function initializeMap() {
   document.getElementsByClassName('leaflet-control-attribution')[0].style.display = 'none';
   
   // Add base layer to map
-  base_layer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png');
+  base_layer = L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png');
   base_layer.addTo(map);
 
   // Create control widget (in closed format)
