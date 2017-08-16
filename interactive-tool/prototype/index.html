@@ -59,7 +59,11 @@
 
 
 <!-- Page -->
-<div id="featured">&nbsp;</div>
+<div id="featured">
+  &nbsp;
+  <a id="tagline">A tool for better understanding the dynamics of food insecurity.</a>
+</div>
+
 <div id="wrapper">
 	<div id="page" class="container">
 		<div id="content">
@@ -67,7 +71,7 @@
 
 		  <!-- Food Inequity Background -->
 		  <div class = "anchor" id="food-insecurity">
-			    <center><H1>Going to Bed Hungry – an Intro to Food insecurity</H1></center>
+			    <center><H1>Going To Bed Hungry – An Intro To Food Insecurity</H1></center>
 			    <img src="images/food-insecurity-1.jpg" alt="US Food Deserts" height="350" width="450" style="float:right; margin:0 10px 10px 25px;">
 
 
@@ -79,7 +83,7 @@
 
 		  <!-- Food Desert Definition -->
 		  <div class = "anchor" id="food-deserts">
-		    <center><H1>Food Deserts – a Food Insecurity Phenomenon</H1></center>
+		    <center><H1>Food Deserts – A Food Insecurity Phenomenon</H1></center>
 
 				<img src="images/urban.png" alt="US Food Deserts" height="250" width="350" style="float:right; margin:0 10px 10px 25px;">
 
@@ -102,7 +106,7 @@
 
 		    <p>Beyond these socially-motivated groups, property owners (or prospective property owners) could use the tool as a means to assess potential risk to their investment, as homes would likely lose value if a food desert emerged in their neighborhood.</p>
 
-		    <center><H2>Underneath the Hood - How Our Predictor Works</H2></center>
+		    <center><H2>Underneath The Hood - How Our Predictor Works</H2></center>
 
         <p>In order to build our predictive tool, we combined datasets from the USDA and several other sources to get a holistic picture of socioeconomic dynamics within California’s 8,000+ census tracts – many of which are currently struggling with food insecurity. Based on an initial model including 98 economic, demographic, housing, and education variables, we identified the variables that were most significant in predicting the emergence of a food desert in a census tract. We then leveraged machine learning principles to build a logistic regression model capable of predicting a food desert with a high degree of accuracy (~80%) on just a handful of variables.</p>
 
@@ -121,9 +125,9 @@
   		    <button style="width:100%; height:100%" onclick="initializeMap();">Click Here To Load Food Desert Predictor</button>
         </div>
 
-        <center><H2>Next Steps</H2></center>
+        <center><H2 style="margin-top: 40px">Next Steps</H2></center>
 
-        <p>Our initial model focused solely on the state of California, and as such we would seek to expand its geographic scope moving forward. Moreover, we would seek to incorporate a broader range of data sources to potentially unearth unexpected contributors to the emergence of food deserts that could inform novel and effective interventions while also improving the accuracy of our predictive model. If we are able to improve our tool and gain adoption from key stakeholders, the impact could potentially improve the health and well-being of millions of children across the United States.</p>
+        <p style="margin-bottom: 100px">Our initial model focused solely on the state of California, and as such we would seek to expand its geographic scope moving forward. Moreover, we would seek to incorporate a broader range of data sources to potentially unearth unexpected contributors to the emergence of food deserts that could inform novel and effective interventions while also improving the accuracy of our predictive model. If we are able to improve our tool and gain adoption from key stakeholders, the impact could potentially improve the health and well-being of millions of children across the United States.</p>
 
 		  </div>
 
@@ -136,16 +140,21 @@
 <div class="anchor" id="footer-wrapper" >
 	<div id="footer">
 		<header class="title">
-			<h2>Team</h2>
-	  </header>
-		<h3>Acknowledgements</h3>
-		<p>Add credits for all data sources and open-source software libraries used in this project.</p>
-		<p>We would like to thank Joyce Shen and Alberto Todeschini for providing guidance throughout the scoping and development of our project.</p>
+		  <h2>Acknowledgements</h2>
+		</header>
+		<p>The food desert predictor was created using 
+		    <a href='http://leafletjs.com'>Leaflet</a>, 
+		    <a href='https://d3js.org/'>D3</a>, and 
+		    <a href='https://jquery.com/'>jQuery</a>.</p>
+		<p>The webpage design was created using <a href="http://templated.co">TEMPLATED</a>.</p>
+		<p>Add credits for all data sources</p>
+		<p>We would like to thank <a href='https://www.linkedin.com/in/joycejshen/'>Joyce Shen</a> and <a href= 'https://www.linkedin.com/in/atodeschini/'>Alberto Todeschini</a> for providing guidance throughout the scoping and development of this project.</p>
 	</div>
 </div>
 
 <div id="copyright" class="container">
-	<p>&copy; Untitled. All rights reserved. | Photos by <a href="http://fotogrph.com/">Fotogrph</a> | Design by <a href="http://templated.co" rel="nofollow">TEMPLATED</a>.</p>
+	<p>&copy;2017 Matthew Acconciamessa, Danish Iqbal, and Bradley Putman. <br /> 
+	UC Berkeley School of Information. All rights reserved.</p>
 </div>
 
 </body>

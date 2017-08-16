@@ -316,7 +316,7 @@
 
   #logo .heading-navigator a:hover
   {
-    color: yellow;
+    color: #068900;
   }
 /*********************************************************************************/
 /* Logo                                                                          */
@@ -384,7 +384,7 @@
 	}
 	
 	#menu li a:hover{
-	  color: yellow;
+	  color: #068900;
 	}
 	
 	#menu .current_page_item a
@@ -509,7 +509,17 @@
 		background-size: 1200px 660px;
 	}
 
-
+  #featured #tagline
+  {
+    position: absolute;
+    width: 1200px;
+    top: 150;
+    color: white;
+    margin: auto;
+    text-align: center;
+    font-size: 150%;
+    font-weight: 300;
+  }
 /*********************************************************************************/
 /* Footer                                                                        */
 /*********************************************************************************/
@@ -517,6 +527,7 @@
 		overflow: hidden;
 		text-align: center;
 		width: 100%;
+		padding-top: 0;
   }
   
   
@@ -527,11 +538,12 @@
 	
 	#footer header
 	{
+	  top: 0;
 	}
 	
-	#footer header h2
+	#footer header h2, #footer h3, #footer p
 	{
-		color: #FFF;
+		color: white;
 	}
 	
 
@@ -543,7 +555,7 @@
 	{
 	  position: absolute;
 		overflow: hidden;
-		padding: 2em 0em 5em 0em;
+		padding: 3em 0em 2em 0em;
 		width: 1200px;
 	}
 	
@@ -553,7 +565,7 @@
 		text-align: center;
 		text-transform: uppercase;
 		font-size: 0.80em;
-		color: #6F6F6F;
+		color: white;
 	}
 	
 	#copyright a
