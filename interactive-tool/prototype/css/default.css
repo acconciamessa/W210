@@ -49,7 +49,8 @@
 	
 	a
 	{
-		color: #068900;
+		color: black;
+		font-weight: 400;
 	}
 	
 	a:hover
@@ -316,7 +317,7 @@
 
   #logo .heading-navigator a:hover
   {
-    color: #068900;
+    color: FireBrick;
   }
 /*********************************************************************************/
 /* Logo                                                                          */
@@ -384,7 +385,7 @@
 	}
 	
 	#menu li a:hover{
-	  color: #068900;
+	  color: FireBrick;
 	}
 	
 	#menu .current_page_item a
@@ -546,6 +547,11 @@
 		color: white;
 	}
 	
+	#footer a
+	{
+	  color: #6f6f6f;
+	}
+	
 
 /*********************************************************************************/
 /* Copyright                                                                     */
@@ -571,7 +577,7 @@
 	#copyright a
 	{
 		text-decoration: none;
-		color: #8C8C8C;
+		color: #6f6f6f;
 	}
 
 /*********************************************************************************/

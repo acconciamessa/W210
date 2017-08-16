@@ -4,6 +4,7 @@
   z-index: 1;
   position: static;
   margin: auto;
+  margin-top: 40px;
 }
 
 #map_frame #map_container {
@@ -29,13 +30,13 @@
   left: 44%;
   z-index: 10;
   
-  border-top: 12px solid blue;
-  border-right: 12px solid green;
-  border-bottom: 12px solid red;
-  border-left: 12px solid white;
+  border-top: 12px solid FireBrick;
+  border-right: 12px solid hsl(0, 0%, 60%);
+  border-bottom: 12px solid hsl(0, 0%, 60%);
+  border-left: 12px solid hsl(0, 0%, 60%);
   border-radius: 50%;
   background-color: hsl(0, 0%, 40%);
-  animation: spin 2s linear infinite;
+  animation: spin 1s linear infinite;
 }
 
 #map_container #loader_text {
@@ -183,7 +184,7 @@
 #map_container #control_widget #low_risk #key {
   width: 30px;
   height: 15px;
-  background-color: hsl(240, 100%, 90%);
+  background-color: hsl(0, 68%, 90%);
   border-style: solid;
   border-color: white;
   border-width: 2px;
@@ -211,7 +212,7 @@
 #map_container #control_widget #medium_risk #key {
   width: 30px;
   height: 15px;
-  background-color: hsl(240, 100%, 70%);
+  background-color: hsl(0, 68%, 70%);
   border-style: solid;
   border-color: white;
   border-width: 2px;
@@ -239,7 +240,7 @@
 #map_container #control_widget #high_risk #key {
   width: 30px;
   height: 15px;
-  background-color: hsl(240, 100%, 50%);
+  background-color: hsl(0, 68%, 50%);
   border-style: solid;
   border-color: white;
   border-width: 2px;
